@@ -126,3 +126,26 @@ transitions, bloom post-processing. High contrast for the projector,
 - The new demo runs 5 times in a row on the laptop with 5 different photos
   (one indoor, one inside the street coverage) with no restarts.
 - Nothing from the existing demo is broken; all existing tests pass.
+
+## Stage direction (applies to demo flow, UI copy and README voice)
+- No jargon on stage. Say "this sign gave you away", not "clue
+  attribution". The technical depth goes in the README and the Q&A.
+- Show one number, not ten: before vs. after distance.
+- Cut anything that isn't flawless. Six shots plus four extras in 3 minutes
+  is a blur. Keep the scan, the side-by-side reveal, the erase and the
+  phone. Add the eye only if it works every time; it's the scariest moment
+  because it's the real 2019 story.
+- The protected photo has to look good. If the edit looks weird, people
+  reject the whole thing instantly. Put the before/after slider on the
+  face to show it's untouched.
+- Let the judge drive. They pick the photo, they press "Protect", and they
+  get it on their phone.
+- Show your ethics in one sentence instead of lecturing: "We never show
+  exact coordinates on screen."
+- Open with a person, not a statistic. Use the 2019 story in one line, or a
+  teammate's real experience if there is one. Never invent one.
+- End with the future: a labelled mockup of "Protect before posting" in the
+  phone's share menu. People want to see it in their own life.
+- Make the reveal work beyond the venue. For photos taken elsewhere, look
+  up the nearest street photo to the AI's guess live (Mapillary covers
+  much of the world) and show it side by side.
