@@ -62,6 +62,10 @@ def main() -> None:
     profile = str(tmp / "profile")
     plan = [("zero", None, 3000, 1600)]
     plan += [("attack", k, 4000, 900 if k < n_frames - 1 else 2200) for k in range(n_frames)]
+    street = next((a for a in st.get("attacks", []) if a["attacker_id"] == "street"), None)
+    thr = (st.get("street_coverage") or {}).get("match_threshold")
+    if street and street.get("street_matches") and thr and street["street_matches"][0]["inliers"] >= thr:
+        plan += [("match", None, 6000, 3000)]
     plan += [("clues", None, 5000, 2600), ("erase", None, 6000, 2400), ("reattack", None, 5000, 2600), ("safe", None, 5000, 3200)]
     frames, durations = [], []
     try:

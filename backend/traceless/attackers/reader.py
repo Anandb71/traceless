@@ -242,7 +242,9 @@ def analyze_text(lines: list[TextLine]) -> tuple[dict[str, float], dict[int, flo
                     evidence.append(f"“{gram.title()}” (country name)")
                 for ci in ix.idx.get(gram, [])[:20]:
                     pop = gaz.pop[ci]
-                    if n == 1 and (len(gram) < 5 or pop < 50_000):
+                    # single words: long distinctive names (e.g. "Abergavenny") count at any
+                    # size; short ones only for big cities (avoids "Nice", "Bath", ...)
+                    if n == 1 and (len(gram) < 5 or (pop < 50_000 and len(gram) < 8)):
                         continue
                     city[ci] = max(city[ci], math.log10(max(pop, 10)) * (1 + 0.5 * (n - 1)) * ln.score)
         cjk = "".join(ch if _is_cjk(ch) else " " for ch in ln.text)

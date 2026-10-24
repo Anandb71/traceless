@@ -45,7 +45,7 @@ export default function MatchView({ st, precise }: { st: SessionState; precise: 
   return (
     <div className="match">
       <div className="match-head">
-        <div className="kicker">Attacker C · street-level match · {attack.attacker_name}</div>
+        <div className="kicker">A street photo already online matches yours · offline street matcher</div>
         <h2>
           Placed <span className="red">{<Counter value={attack.distance_km} format={km} />}</span> from where you stood.
         </h2>

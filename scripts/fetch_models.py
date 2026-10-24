@@ -31,8 +31,8 @@ LAMA_OUT = WEIGHTS / "big-lama.pt"
 YUNET_URL = "https://github.com/opencv/opencv_zoo/raw/main/models/face_detection_yunet/face_detection_yunet_2023mar.onnx"
 YUNET_OUT = WEIGHTS / "face_detection_yunet_2023mar.onnx"
 
-GEONAMES_URL = "https://download.geonames.org/export/dump/cities15000.zip"
-GEONAMES_OUT = ROOT / "models" / "weights" / "cities15000.txt"
+GEONAMES_URL = "https://download.geonames.org/export/dump/cities5000.zip"
+GEONAMES_OUT = ROOT / "models" / "weights" / "cities5000.txt"
 GEONAMES_EXTRA = {
     "countryInfo.txt": "https://download.geonames.org/export/dump/countryInfo.txt",
     "admin1CodesASCII.txt": "https://download.geonames.org/export/dump/admin1CodesASCII.txt",
@@ -129,7 +129,7 @@ def fetch_geonames() -> None:
     r = httpx.get(GEONAMES_URL, follow_redirects=True, timeout=300, headers=UA)
     r.raise_for_status()
     with zipfile.ZipFile(io.BytesIO(r.content)) as z:
-        GEONAMES_OUT.write_bytes(z.read("cities15000.txt"))
+        GEONAMES_OUT.write_bytes(z.read("cities5000.txt"))
     print(f"ok  {GEONAMES_OUT.name} ({GEONAMES_OUT.stat().st_size / 1e6:.0f} MB)")
 
 

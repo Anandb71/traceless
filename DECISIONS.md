@@ -183,3 +183,20 @@ the smallest T above that with ≥95% of leave-one-out claims within 100 m is 55
 At T = 55: 62 claims of 120 queries, precision@100 m 95.2%, recall@1 within
 25 m 43%, within 100 m 49%. Commons GPS tags are themselves noisy, so 25 m
 recall understates the matcher. Re-measure on the venue index once built.
+
+### D24 · Gazetteer → GeoNames cities5000; long single-word names count
+On the Abergavenny photo OCR read "ABERGAVENNY" but The Reader said "nothing
+readable": the town (~12k people) is not in cities15000, and single-word
+matches required a 50k population. Now cities5000 (15 MB) and single words of
+≥ 8 letters match at any population (short words still need a big city, so
+"Nice"/"Bath"-style collisions stay out). The Reader now places that photo
+0.1 km from the truth from text alone. Benchmark re-run after this change.
+
+### D25 · Never index our own fixtures; stale-socket port fallback
+The Madrid street index contained the fixture photo itself (retrieval 1.00,
+1,023 inliers) — matching a photo against itself is not a street match. The
+index builder now excludes every fixture's Commons file. After the fix the
+matcher found a *different* photo of the same shop: 147 inliers (T = 55),
+170 m away — a real Shot 4. Separately, a killed server left an orphaned
+listening socket on :8000; the server now falls back to the next free port
+and prints the URL instead of crashing.

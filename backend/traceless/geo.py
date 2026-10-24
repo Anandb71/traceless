@@ -149,7 +149,7 @@ def _cell_area(c: str) -> float:
 
 
 # --------------------------------------------------------------------------- #
-# Gazetteer (GeoNames cities15000, CC-BY 4.0)
+# Gazetteer (GeoNames cities5000, CC-BY 4.0)
 # --------------------------------------------------------------------------- #
 
 
@@ -187,7 +187,7 @@ class Gazetteer:
             if len(f) >= 2:
                 self.admin1[f[0]] = f[1]
         names, lats, lons, ccs, a1s, pops, alts = [], [], [], [], [], [], []
-        with open(weights_dir / "cities15000.txt", encoding="utf-8") as fh:
+        with open(weights_dir / "cities5000.txt", encoding="utf-8") as fh:
             for line in fh:
                 f = line.rstrip("\n").split("\t")
                 names.append(f[1])
