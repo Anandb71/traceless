@@ -175,3 +175,11 @@ Rewriting the globe would have cost the time Attacker C needed; globe.gl already
 extrudes H3 cells from real distributions. Each "shot" renders from the session
 state the backend computes (attacks, collapse frames, street matches, depth),
 so every animated value interpolates between computed states.
+
+### D23 · Street-match threshold = 55 inliers (measured)
+`bench/street_threshold.py` on the Commons Madrid test index (600 photos): 50
+out-of-coverage negatives (fixtures + Im2GPS3k > 50 km away) peak at 45 inliers;
+the smallest T above that with ≥95% of leave-one-out claims within 100 m is 55.
+At T = 55: 62 claims of 120 queries, precision@100 m 95.2%, recall@1 within
+25 m 43%, within 100 m 49%. Commons GPS tags are themselves noisy, so 25 m
+recall understates the matcher. Re-measure on the venue index once built.
