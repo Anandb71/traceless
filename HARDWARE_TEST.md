@@ -25,6 +25,14 @@ fixture photos; these are the checks that need real hardware before demo day.
       the back row. Distances readable (64 px numerals).
 - [ ] Globe frame rate is smooth during the collapse (WebGL on the laptop GPU).
 
+## Upgrade features (UPGRADE.md)
+- [ ] Shot 1 diorama: smooth (≥ 30 fps) on the laptop GPU, no stretched "curtains" at object edges.
+- [ ] Sound: pings on each collapse frame, rumble during convergence, shatter on Protect; S mutes.
+- [ ] Shot 4 match lines draw in a real browser (headless screenshots only show the end state).
+- [ ] Shot 5 particle dissolve plays once, then the cleaned photo stays.
+- [ ] Street coverage built for the venue; a photo taken inside it gets "The match"; one taken
+      elsewhere skips it.
+
 ## Network / offline
 - [ ] Wi-Fi off + `TRACELESS_OFFLINE=1`: full run on 2 fixture photos.
 - [ ] Phone hotspot only (no venue Wi-Fi): QR upload works.

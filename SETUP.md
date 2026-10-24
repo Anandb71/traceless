@@ -15,8 +15,23 @@ What `fetch_models.py` downloads into `models/weights/` (gitignored):
 |---|---|---|
 | `clip-vit-l14-vision-fp16.safetensors` | 608 MB | GeoCLIP's CLIP ViT-L/14 vision tower only (range-requested, text tower skipped) |
 | `big-lama.pt` | 206 MB | LaMa inpainting (TorchScript) |
-| `cities15000.txt`, `countryInfo.txt`, `admin1CodesASCII.txt` | 9 MB | GeoNames gazetteer (CC-BY 4.0) |
+| `cities5000.txt`, `countryInfo.txt`, `admin1CodesASCII.txt` | 15 MB | GeoNames gazetteer (CC-BY 4.0) |
 | `face_detection_yunet_2023mar.onnx` | 0.2 MB | YuNet face/eye detector |
+| `torch/hub/checkpoints/*` | 165 MB | street matcher (EigenPlaces, SuperPoint, LightGlue) + LPIPS SqueezeNet |
+| `depth-anything-v2-small/` | 99 MB | Shot 1 depth (Depth Anything V2 Small) |
+
+### Street coverage for Attacker C (once per venue, needs internet)
+
+```bash
+# with MAPILLARY_TOKEN in backend/.env (CC BY-SA street photos, credited on screen):
+backend/.venv/Scripts/python scripts/build_street_index.py --lat <venue lat> --lon <venue lon> --radius-km 2 --name venue
+# no token: Wikimedia Commons geotagged photos instead
+backend/.venv/Scripts/python scripts/build_street_index.py --lat <lat> --lon <lon> --radius-km 2 --name venue --source commons
+backend/.venv/Scripts/python bench/street_threshold.py   # re-measure the match threshold on this index
+```
+Only one index is loaded (the first folder alphabetically under `models/weights/street/`);
+remove or rename the `madrid-test` index when the venue index exists. Street-level claims
+are only ever made inside the downloaded coverage, whose size is shown on screen.
 
 GeoCLIP's own heads + 100k GPS gallery ship inside the `geoclip` pip package.
 GPU is optional: the CUDA 12.6 torch build uses an NVIDIA GPU when present and falls
@@ -28,7 +43,8 @@ back to CPU automatically (`TRACELESS_DEVICE=cpu` forces CPU).
 make demo           # serves everything on http://localhost:8000 (and the LAN IP)
 ```
 
-1. Open `http://localhost:8000` full-screen on the projector (F11). Wait for the
+1. Open the URL the server prints (normally `http://localhost:8000`; if that port is
+   stuck it falls back to 8001+ and says so) full-screen on the projector (F11). Wait for the
    **models ready** chip (≈30 s on first start; warm-up runs automatically).
 2. Laptop and phones on the same network (a phone hotspot works). The QR on the
    home screen points at the laptop's LAN IP; if it shows `127.0.0.1`, set
@@ -47,6 +63,7 @@ make demo           # serves everything on http://localhost:8000 (and the LAN IP
 | M | toggle exact places (owner's OK) vs privacy mode (regions + distances only) |
 | B | benchmark screen |
 | H / Esc | home (new photo) |
+| S | sound on/off |
 | Shift+W | wipe every uploaded photo and derived file from the laptop |
 
 ## Wi-Fi-off rehearsal
