@@ -269,3 +269,23 @@ td { font-family: var(--mono); }
 .dpin.on .dpin-dot { opacity: 1; transform: none; }
 .dpin.on .dpin-stem { opacity: 0.9; }
 .diorama-tag { position: absolute; left: 14px; bottom: 12px; font: 600 11px var(--mono); letter-spacing: 0.1em; text-transform: uppercase; color: var(--red); background: rgba(4, 6, 11, 0.7); padding: 4px 8px; border-radius: 4px; animation: pulse 1.4s infinite; }
+
+.protect-btn { margin-top: 14px; font: 700 20px var(--display); color: #04110c; background: var(--teal); border: 0; border-radius: 14px; padding: 14px 28px; cursor: pointer; box-shadow: 0 0 40px rgba(46,230,166,0.35); animation: fadein 0.6s both; }
+.protect-btn:hover { filter: brightness(1.1); }
+.ethics { font: 600 13px var(--mono); color: var(--mute); margin-top: 8px; }
+
+/* ---------- closing concept mockup ---------- */
+.future { height: 100%; display: grid; grid-template-columns: 420px 1fr; gap: 80px; align-items: center; padding: 40px 120px; }
+.phone { width: 360px; height: 740px; border-radius: 48px; border: 10px solid #1b2234; background: #0b0f18; overflow: hidden; position: relative; box-shadow: 0 40px 120px rgba(0,0,0,.7); }
+.phone-photo { position: absolute; inset: 0 0 45% 0; background: url(/fixtures/photos/madrid-jamon-shopfront.jpg) center/cover; filter: brightness(.7); }
+.sheet { position: absolute; left: 0; right: 0; bottom: 0; height: 58%; background: #161c2a; border-radius: 26px 26px 0 0; padding: 18px; display: flex; flex-direction: column; gap: 10px; }
+.sheet-title { font: 600 14px var(--text); color: var(--mute); text-align: center; }
+.sheet-row { display: flex; justify-content: space-between; padding: 6px 4px 10px; }
+.share-app { display: flex; flex-direction: column; align-items: center; gap: 6px; font-size: 11px; color: var(--mute); }
+.share-app i { width: 48px; height: 48px; border-radius: 12px; background: #2a3247; }
+.sheet-action { background: #1f2638; border-radius: 12px; padding: 12px 14px; font-size: 14px; color: var(--ink); }
+.sheet-action.hot { background: linear-gradient(135deg, rgba(46,230,166,.22), rgba(46,230,166,.06)); border: 1px solid rgba(46,230,166,.6); display: flex; flex-direction: column; gap: 2px; animation: pulse 1.8s infinite; }
+.sheet-action.hot b { color: var(--teal); font: 700 16px var(--display); }
+.sheet-action.hot span { font-size: 12px; color: var(--mute); }
+.future-copy h1 { font: 700 72px/1.04 var(--display); letter-spacing: -.03em; margin: 12px 0 18px; }
+.future-copy h1 em { font-style: normal; color: var(--teal); }

@@ -30,6 +30,7 @@ export function ZeroPanel({ st }: { st: SessionState | null }) {
         </span>
       </div>
       <p className="quote">“Most apps strip this. Nobody strips the picture.”</p>
+      <p className="ethics">We never show exact coordinates on screen.</p>
     </div>
   );
 }
@@ -92,15 +93,15 @@ function AttackerRow({ a, before }: { a: AttackResult; before?: AttackResult }) 
 export function CluesPanel({ st, highlight }: { st: SessionState | null; highlight?: string | null }) {
   const clues = st?.clues ?? [];
   const measured = clues.filter((c) => c.contribution);
-  if (!measured.length) return pending("Measuring each clue by ablation…");
+  if (!measured.length) return pending("Testing each clue…");
   const max = Math.max(0.05, ...measured.map((c) => Math.abs(c.contribution!.gain)));
   const top = measured.find((c) => c.contribution!.rank === 1);
   return (
     <div className="clues">
-      <div className="kicker">Which clues gave you away · measured by ablation (GeoCLIP)</div>
+      <div className="kicker">What gave you away · we erased each clue and attacked again</div>
       {top && top.contribution!.gain > 0.01 && (
         <p className="headline">
-          {top.label} alone cut the search area from <b>{area(top.contribution!.area_without_km2)}</b> to <b>{area(top.contribution!.area_with_km2)}</b>.
+          This {top.label.toLowerCase()} alone shrank the search from <b>{area(top.contribution!.area_without_km2)}</b> to <b>{area(top.contribution!.area_with_km2)}</b>.
         </p>
       )}
       <div className="bars">

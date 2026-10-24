@@ -1,31 +1,32 @@
 # DEMO — the 3-minute run (presenter script)
 
-Every number on screen comes from this run (or `make bench`). Press → to advance;
-compute runs ahead in the background, so the pace is yours. **P** at any point
-replays the recorded take for that step.
+Stage rules (UPGRADE.md): no jargon on stage, one number at a time (before vs after
+distance), the judge drives, ethics in one sentence. Every number on screen comes from
+this run. → advances; compute runs ahead in the background. **P** replays the recorded
+take for the current step if anything stalls.
 
-| time | screen | say |
+| time | screen | say / do |
 |---|---|---|
-| 0:00 | Home (QR) | "In 2019 a man found a pop idol's home from the reflection in her eyes in a photo she posted. AI does that in seconds now. Send me a photo you'd post — from a public place." Judge scans the QR, sends a photo. |
-| 0:20 | **1 Clue zero** | If GPS: "Your photo carries its own GPS coordinates." STRIPPED stamp. "Most apps strip this. Nobody strips the picture." If no GPS: "No GPS in this file — but watch." |
-| 0:30 | **2 The attack** | Boxes pop onto the photo while the globe's cloud collapses country → city → street (real frames: clues restored one at a time). Read the readout: "Placed **X km** from where you were." Name the attackers: offline GeoCLIP, an OCR sleuth, and (if online) a frontier vision model. |
-| 1:10 | **3 What gave you away** | "Each clue measured by erasing it and attacking again: **this sign alone** cut the search area from A to B." |
-| 1:30 | **4 Erase** | Clues dissolve. "Signs keep their boards but lose their words. The face is untouched — zero pixels changed." Read % pixels changed + SSIM. |
-| 1:50 | **5 Re-attack** | "Now different AIs — one is *told* the photo was edited and only looks at what we didn't touch." Cloud bursts out. "Best guess now **Y km** off." Read the verdict line exactly as written (radius + attackers). |
-| 2:20 | **6 Safe to post** | Judge scans the card QR → the protected photo lands on their phone. Card: before/after distance, search-area growth, % pixels changed, location data stripped. |
-| 2:35 | **7 Benchmark** (B) | "On N public photos with known locations, city-level placement dropped from A% to B%; median error went from C to D km." (numbers from `bench/results/latest.json`) |
-| 2:50 | close | "Share the moment, not the address." |
+| 0:00 | Home (QR) | "In 2019 a man found a pop star's home from the reflection in her eyes in a photo she posted." Hand the judge the QR: "Send me a photo you'd post — from a public place." |
+| 0:15 | **1 Your file** (3D scan) | The photo comes alive; the scan sweeps; clue pins light up. If GPS: "Your photo carries its own GPS." STRIPPED. "Most apps strip this. Nobody strips the picture." "We never show exact coordinates on screen." |
+| 0:35 | **2 The attack** | The cloud collapses country → city. Say only the big number: "Placed **X km** from where you were." |
+| 1:00 | **3 The match** (only if a street match passed the measured threshold) | Lines connect your photo to a street photo. "Placed **X m** from where you stood." |
+| 1:20 | **4 What gave you away** | "This sign alone gave you away." Hand the judge the clicker / point at **Protect my photo** — *they* press it. |
+| 1:35 | **5 Protect** | The clues break apart; the photo stays. "Your face is untouched." |
+| 1:50 | **6 Re-attack** | "Different AIs — one told it was edited." Cloud bursts out. "Best guess now **Y km** off." The slider starts on the face: drag it. |
+| 2:20 | **7 Safe to post** | Judge scans the QR → protected photo on their phone. One line: before → after distance. |
+| 2:35 | **8 Benchmark** (B) | One sentence: "On N public photos, city-level placement dropped from A% to B%." |
+| 2:45 | **9 Close** | The share-menu mockup (labelled concept). "Share the moment, not the address." |
 
 ## Branches
-- **Indoor / already hard to place** → step 2 shows *"Good news — this one is already
-  hard to place"* with its numbers; → jumps to the card (0% pixels changed). Then press
-  **H** and run a prepared outdoor fixture (Madrid shopfront) — the failure becomes a feature.
-- **Target not reached** (e.g. a world-famous scene) → say the verdict as written:
-  "Not within 25 km for GeoCLIP — the whole scene is the landmark. We tell you instead
-  of wrecking your photo." Show the search-area growth on the card.
+- **Indoor / already hard to place** → "Good news — this one is already hard to place";
+  → skips to the card. Then **H** and run the prepared photo.
+- **Target not reached** → read the verdict as written; show the search area growth.
+  "We'd rather tell you than wreck your photo."
+- **No street match** → step 3 is skipped automatically. Never claim street level outside coverage.
 - **Anything hangs** → **P**.
 
-## Privacy on the projector
-Default is privacy mode: region names + distances, no coordinates, globe never zooms
-below ~country scale, no "you were here" pin. Public landmarks (and **M**, with the
-owner's OK) show exact places. Shift+W wipes the session from the laptop at the end.
+## Before going on stage
+- `make demo`, wait for **models ready**; run one SIM photo (records the PANIC take).
+- Sound on (S toggles). Privacy mode on (default).
+- After the session: **Shift+W** wipes every uploaded photo from the laptop.

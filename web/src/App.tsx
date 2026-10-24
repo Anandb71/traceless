@@ -7,6 +7,7 @@ import Home from "./steps/Home";
 import { AttackPanel, CluesPanel, ErasePanel, ReattackPanel, ZeroPanel } from "./steps/Panels";
 import SafeCard from "./steps/SafeCard";
 import Bench from "./steps/Bench";
+import Future from "./steps/Future";
 import Readout from "./components/Readout";
 import Diorama from "./components/Diorama";
 import Rationale from "./components/Rationale";
@@ -14,18 +15,19 @@ import MatchView, { SnapLines } from "./steps/Match";
 import { streetMatch } from "./street";
 import { sound } from "./sound";
 
-export type Step = "home" | "zero" | "attack" | "match" | "clues" | "erase" | "reattack" | "safe" | "bench";
-const STEPS: Step[] = ["home", "zero", "attack", "match", "clues", "erase", "reattack", "safe", "bench"];
+export type Step = "home" | "zero" | "attack" | "match" | "clues" | "erase" | "reattack" | "safe" | "bench" | "future";
+const STEPS: Step[] = ["home", "zero", "attack", "match", "clues", "erase", "reattack", "safe", "bench", "future"];
 const STEP_LABEL: Record<Step, string> = {
   home: "Send a photo",
-  zero: "Clue zero",
+  zero: "Your file",
   attack: "The attack",
   match: "The match",
   clues: "What gave you away",
-  erase: "Erase",
+  erase: "Protect",
   reattack: "Re-attack",
   safe: "Safe to post",
   bench: "Benchmark",
+  future: "Close",
 };
 
 const FRAME_MS = 1500;
@@ -243,7 +245,7 @@ export default function App() {
     return undefined;
   })();
 
-  const cells: HexCell[] = step === "home" || step === "zero" || step === "bench" ? [] : shownAttack?.distribution ?? [];
+  const cells: HexCell[] = step === "home" || step === "zero" || step === "bench" || step === "future" ? [] : shownAttack?.distribution ?? [];
   const focus =
     shownAttack?.top && step !== "home" && step !== "zero" && step !== "bench"
       ? { lat: shownAttack.top.lat, lon: shownAttack.top.lon, km2: shownAttack.credible_area_km2 }
@@ -306,6 +308,13 @@ export default function App() {
       </Shell>
     );
   }
+  if (step === "future") {
+    return (
+      <Shell step={step} health={health} precise={isPrecise} replay={replay} toast={toast}>
+        <Future />
+      </Shell>
+    );
+  }
   if (step === "bench") {
     return (
       <Shell step={step} health={health} precise={isPrecise} replay={replay} toast={toast} muted={muted}>
@@ -352,6 +361,11 @@ export default function App() {
             {step === "zero" && <ZeroPanel st={st} />}
             {step === "attack" && <AttackPanel st={st} frame={frame} frames={frames.length} />}
             {step === "clues" && <CluesPanel st={st} highlight={hlId} />}
+            {step === "clues" && !st?.already_safe && (
+              <button className="protect-btn" onClick={() => setStep("erase")}>
+                Protect my photo
+              </button>
+            )}
             {step === "erase" && <ErasePanel st={st} />}
             {step === "reattack" && <ReattackPanel st={st} />}
             {step === "safe" && <SafeCard st={st} />}

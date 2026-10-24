@@ -16,8 +16,8 @@ from PIL import Image
 
 from .geo import WEIGHTS_DIR
 
-MODEL_ID = "depth-anything/Depth-Anything-V2-Small-hf"
-os.environ.setdefault("HF_HOME", str(WEIGHTS_DIR / "hf"))
+MODEL_DIR = WEIGHTS_DIR / "depth-anything-v2-small"  # fetched by scripts/fetch_models.py depth
+os.environ.setdefault("HF_HUB_OFFLINE", "1")  # never let the hub client touch the network at demo time
 
 _PIPE = None
 _LOCK = threading.Lock()
@@ -31,7 +31,9 @@ def _pipe():
             from transformers import pipeline
 
             dev = 0 if torch.cuda.is_available() and os.environ.get("TRACELESS_DEVICE", "auto") != "cpu" else -1
-            _PIPE = pipeline("depth-estimation", model=MODEL_ID, device=dev)
+            if not (MODEL_DIR / "model.safetensors").exists():
+                raise RuntimeError("depth model missing: run scripts/fetch_models.py depth")
+            _PIPE = pipeline("depth-estimation", model=str(MODEL_DIR), device=dev)
         return _PIPE
 
 

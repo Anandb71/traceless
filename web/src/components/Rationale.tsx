@@ -24,7 +24,7 @@ export function rationaleLines(st: SessionState | null): (RationaleStep & { who:
     out.push({
       text: `${c.label} — ${c.description || TYPE_NAMES[c.type]}`,
       clue_ids: [c.id],
-      who: "measured by ablation",
+      who: "tested: erased and re-attacked",
     });
   }
   return out;

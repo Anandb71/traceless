@@ -24,6 +24,11 @@ export default function PhotoStage(p: Props) {
   const wrap = useRef<HTMLDivElement>(null);
   const [size, setSize] = useState({ w: 0, h: 0 });
   const [split, setSplit] = useState(50);
+  // Stage direction: start the before/after slider on the face — it is untouched.
+  const face = p.faces?.[0];
+  useEffect(() => {
+    if (p.mode === "compare" && face) setSplit(Math.round((face.x + face.w / 2) * 100));
+  }, [p.mode, face?.x, face?.w]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     const el = wrap.current;

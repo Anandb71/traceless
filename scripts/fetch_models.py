@@ -133,6 +133,16 @@ def fetch_geonames() -> None:
     print(f"ok  {GEONAMES_OUT.name} ({GEONAMES_OUT.stat().st_size / 1e6:.0f} MB)")
 
 
+DEPTH_REPO = "https://huggingface.co/depth-anything/Depth-Anything-V2-Small-hf/resolve/main/"
+DEPTH_DIR = WEIGHTS / "depth-anything-v2-small"
+
+
+def fetch_depth() -> None:
+    """Plain HTTP (huggingface_hub's client hung on this network)."""
+    for f in ("config.json", "preprocessor_config.json", "model.safetensors"):
+        fetch_file(DEPTH_REPO + f, DEPTH_DIR / f)
+
+
 def fetch_torch_hub() -> None:
     """Street matcher (EigenPlaces, SuperPoint, LightGlue) + LPIPS SqueezeNet, into
     models/weights/torch so they load with Wi-Fi off."""
@@ -147,7 +157,9 @@ def fetch_torch_hub() -> None:
 
 
 if __name__ == "__main__":
-    which = set(sys.argv[1:]) or {"clip", "lama", "geonames", "yunet", "hub"}
+    which = set(sys.argv[1:]) or {"clip", "lama", "geonames", "yunet", "hub", "depth"}
+    if "depth" in which:
+        fetch_depth()
     if "hub" in which:
         fetch_torch_hub()
     if "yunet" in which:

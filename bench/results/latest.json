@@ -1,0 +1,211 @@
+{
+  "dataset": "Im2GPS3k",
+  "date": "2026-10-25",
+  "radius_km": 25.0,
+  "thresholds_km": [
+    1,
+    25,
+    200,
+    750,
+    2500
+  ],
+  "command": "python bench/run_bench.py --n 300 --clue-rich 100",
+  "device": "NVIDIA GeForce RTX 3050 6GB Laptop GPU",
+  "subsets": [
+    {
+      "label": "Random subset (seed 0, first 300)",
+      "n": 300,
+      "attempted": 300,
+      "already_safe": 199,
+      "defended": 101,
+      "reached_target": 33,
+      "attackers": {
+        "geoclip": {
+          "name": "GeoCLIP (offline)",
+          "before": {
+            "acc": {
+              "1": 0.14,
+              "25": 0.3367,
+              "200": 0.4833,
+              "750": 0.6867,
+              "2500": 0.82
+            },
+            "median_km": 232.29,
+            "median_area_km2": 5866.45,
+            "n": 300
+          },
+          "after": {
+            "acc": {
+              "1": 0.08,
+              "25": 0.2033,
+              "200": 0.3933,
+              "750": 0.6233,
+              "2500": 0.7733
+            },
+            "median_km": 377.66,
+            "median_area_km2": 7127.56,
+            "n": 300
+          }
+        },
+        "geoclip-adaptive": {
+          "name": "GeoCLIP adaptive (told what was edited)",
+          "before": {
+            "acc": {
+              "1": 0.13,
+              "25": 0.3133,
+              "200": 0.4833,
+              "750": 0.6833,
+              "2500": 0.82
+            },
+            "median_km": 232.84,
+            "median_area_km2": 34527.98,
+            "n": 300
+          },
+          "after": {
+            "acc": {
+              "1": 0.0867,
+              "25": 0.2267,
+              "200": 0.4167,
+              "750": 0.6367,
+              "2500": 0.7867
+            },
+            "median_km": 346.05,
+            "median_area_km2": 41285.05,
+            "n": 300
+          }
+        },
+        "reader": {
+          "name": "The Reader (OCR sleuth)",
+          "before": {
+            "acc": {
+              "1": 0.0,
+              "25": 0.01,
+              "200": 0.01,
+              "750": 0.0133,
+              "2500": 0.0233
+            },
+            "median_km": 1974.85,
+            "median_area_km2": 226439.46,
+            "n": 300
+          },
+          "after": {
+            "acc": {
+              "1": 0.0,
+              "25": 0.0,
+              "200": 0.0,
+              "750": 0.0033,
+              "2500": 0.0167
+            },
+            "median_km": 2159.53,
+            "median_area_km2": 226439.46,
+            "n": 300
+          }
+        }
+      },
+      "quality": {
+        "lpips_mean": 0.0486,
+        "ssim_mean": 0.909,
+        "pct_changed_median": 19.54
+      },
+      "median_seconds": 5.3
+    },
+    {
+      "label": "Clue-rich subset (>= 2 confident OCR lines)",
+      "n": 100,
+      "attempted": 100,
+      "already_safe": 57,
+      "defended": 43,
+      "reached_target": 14,
+      "attackers": {
+        "geoclip": {
+          "name": "GeoCLIP (offline)",
+          "before": {
+            "acc": {
+              "1": 0.23,
+              "25": 0.42,
+              "200": 0.55,
+              "750": 0.74,
+              "2500": 0.84
+            },
+            "median_km": 148.53,
+            "median_area_km2": 4048.48,
+            "n": 100
+          },
+          "after": {
+            "acc": {
+              "1": 0.17,
+              "25": 0.26,
+              "200": 0.41,
+              "750": 0.64,
+              "2500": 0.78
+            },
+            "median_km": 394.75,
+            "median_area_km2": 6361.42,
+            "n": 100
+          }
+        },
+        "geoclip-adaptive": {
+          "name": "GeoCLIP adaptive (told what was edited)",
+          "before": {
+            "acc": {
+              "1": 0.23,
+              "25": 0.43,
+              "200": 0.56,
+              "750": 0.72,
+              "2500": 0.86
+            },
+            "median_km": 108.26,
+            "median_area_km2": 15753.08,
+            "n": 100
+          },
+          "after": {
+            "acc": {
+              "1": 0.16,
+              "25": 0.29,
+              "200": 0.45,
+              "750": 0.65,
+              "2500": 0.81
+            },
+            "median_km": 294.78,
+            "median_area_km2": 20626.95,
+            "n": 100
+          }
+        },
+        "reader": {
+          "name": "The Reader (OCR sleuth)",
+          "before": {
+            "acc": {
+              "1": 0.0,
+              "25": 0.05,
+              "200": 0.05,
+              "750": 0.08,
+              "2500": 0.14
+            },
+            "median_km": 4679.8,
+            "median_area_km2": 41153.38,
+            "n": 100
+          },
+          "after": {
+            "acc": {
+              "1": 0.0,
+              "25": 0.0,
+              "200": 0.0,
+              "750": 0.01,
+              "2500": 0.08
+            },
+            "median_km": 5379.09,
+            "median_area_km2": 84767.63,
+            "n": 100
+          }
+        }
+      },
+      "quality": {
+        "lpips_mean": 0.0726,
+        "ssim_mean": 0.8913,
+        "pct_changed_median": 21.24
+      },
+      "median_seconds": 9.1
+    }
+  ],
+  "failures": []
+}
