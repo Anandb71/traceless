@@ -1,0 +1,56 @@
+[project]
+name = "traceless"
+version = "0.1.0"
+description = "See what a stalker's AI sees in your photo - then make it unplaceable."
+requires-python = ">=3.12,<3.13"
+dependencies = [
+  "fastapi>=0.115",
+  "uvicorn>=0.30",
+  "python-multipart>=0.0.9",
+  "pillow>=10.4",
+  "numpy>=1.26,<3",
+  "opencv-python-headless>=4.10",
+  "h3>=4.1",
+  "torch>=2.4",
+  "torchvision>=0.19",
+  "transformers>=4.44",
+  "safetensors>=0.4",
+  "rapidocr-onnxruntime>=1.3",
+  "httpx>=0.27",
+  "segno>=1.6",
+  "pytorch-msssim>=1.0",
+  "lpips>=0.1.4",
+  "pydantic>=2.8",
+  "pillow-heif>=1.8.1",
+  "piexif>=1.1.3",
+  "geoclip>=1.2.3",
+  "anthropic>=2.3.0",
+  "python-dotenv>=1.2.4",
+  "lightglue",
+]
+
+[dependency-groups]
+dev = ["pytest>=8", "ruff>=0.6"]
+
+[tool.uv]
+link-mode = "hardlink"
+
+[tool.uv.sources]
+torch = { index = "pytorch-cu126" }
+torchvision = { index = "pytorch-cu126" }
+lightglue = { git = "https://github.com/cvg/LightGlue.git" }
+
+[[tool.uv.index]]
+name = "pytorch-cu126"
+url = "https://download.pytorch.org/whl/cu126"
+explicit = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 120
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B"]
+ignore = ["E501", "B008", "E731", "E741", "B905"]  # FastAPI File()/Form() defaults are idiomatic

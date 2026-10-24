@@ -20,3 +20,12 @@ session_photos/
 *.safetensors
 models/weights/
 coverage/
+
+# local scratch / runtime
+.scratch/
+sessions/
+takes/
+bench/data/im2gps3k/
+bench/runs/
+bench/data/*.zip
+bench/results/per_image.jsonl

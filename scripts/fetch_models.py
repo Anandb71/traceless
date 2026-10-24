@@ -28,6 +28,9 @@ CLIP_OUT = WEIGHTS / "clip-vit-l14-vision-fp16.safetensors"
 LAMA_URL = "https://github.com/enesmsahin/simple-lama-inpainting/releases/download/v0.1.0/big-lama.pt"
 LAMA_OUT = WEIGHTS / "big-lama.pt"
 
+YUNET_URL = "https://github.com/opencv/opencv_zoo/raw/main/models/face_detection_yunet/face_detection_yunet_2023mar.onnx"
+YUNET_OUT = WEIGHTS / "face_detection_yunet_2023mar.onnx"
+
 GEONAMES_URL = "https://download.geonames.org/export/dump/cities15000.zip"
 GEONAMES_OUT = ROOT / "models" / "weights" / "cities15000.txt"
 GEONAMES_EXTRA = {
@@ -130,8 +133,25 @@ def fetch_geonames() -> None:
     print(f"ok  {GEONAMES_OUT.name} ({GEONAMES_OUT.stat().st_size / 1e6:.0f} MB)")
 
 
+def fetch_torch_hub() -> None:
+    """Street matcher (EigenPlaces, SuperPoint, LightGlue) + LPIPS SqueezeNet, into
+    models/weights/torch so they load with Wi-Fi off."""
+    sys.path.insert(0, str(ROOT / "backend"))
+    import traceless  # noqa: F401  (sets TORCH_HOME)
+    from traceless.attackers.street import StreetModels
+    from traceless.metrics import _lpips
+
+    StreetModels.get()
+    _lpips()
+    print("ok  street matcher + LPIPS checkpoints")
+
+
 if __name__ == "__main__":
-    which = set(sys.argv[1:]) or {"clip", "lama", "geonames"}
+    which = set(sys.argv[1:]) or {"clip", "lama", "geonames", "yunet", "hub"}
+    if "hub" in which:
+        fetch_torch_hub()
+    if "yunet" in which:
+        fetch_file(YUNET_URL, YUNET_OUT)
     if "geonames" in which:
         fetch_geonames()
     if "lama" in which:

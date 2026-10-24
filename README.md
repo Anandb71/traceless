@@ -1,0 +1,198 @@
+# TRACELESS
+
+> **See what a stalker's AI sees in your photo — then make it unplaceable.**
+
+![TRACELESS: the attack collapses onto your street, the erase, the re-attack bursts back out](docs/hero.png)
+
+You hand over a photo you're about to post. TRACELESS shows what an AI geolocator reads
+from the **pixels alone** — sign text, architecture, vegetation, road markings,
+reflections — while a globe shows the guess collapsing from country to street as each
+clue is found. Then it erases those clues, attacks the photo again with *different* AIs
+(one of them told the photo was edited), and proves — with numbers — that it can no
+longer be placed. You get the protected photo back on your phone.
+
+**Track 2 — Make the Invisible Visible.** The interesting part is what happens after
+detection: TRACELESS detects the clues, removes them, and *measures* that the removal worked.
+
+---
+
+## The threat
+
+- **2019, Japan:** a man found a pop idol's home from the reflection in her pupils in a
+  selfie she posted — he matched the reflected station with Street View
+  ([NBC News / AP, Oct 2019](https://www.nbcnews.com/news/world/stalking-suspect-allegedly-studied-pop-idol-s-pupil-images-online-n1064916);
+  [SCMP, Feb 2020](https://www.scmp.com/week-asia/people/article/3052704/japanese-sex-pest-jailed-stalking-pop-idol-ena-matsuoka-using)).
+- **AI does it in seconds now.** GeoSpy geolocates photos from pixels and is sold to police
+  ([404 Media, Jan 2025](https://www.404media.co/the-powerful-ai-tool-that-cops-or-stalkers-can-use-to-geolocate-photos-in-seconds/);
+  [Feb 2026](https://www.404media.co/cops-are-buying-geospy-ai-that-geolocates-photos-in-seconds/)).
+  In April 2025 "reverse location search" with ChatGPT o3 went viral
+  ([TechCrunch](https://techcrunch.com/2025/04/17/the-latest-viral-chatgpt-trend-is-doing-reverse-location-search-from-photos/)).
+- **Stripping location data doesn't help.** Every platform strips EXIF/GPS. The picture
+  itself is the leak — and nobody strips the picture.
+
+## What TRACELESS does
+
+1. **Clue zero** — reads the file's EXIF/GPS, shows it, strips it. GPS is never attack
+   input; it's only the answer key for measuring distance error.
+2. **The attack (pixels only)** — three attacker families, two of them fully offline:
+   - **GeoCLIP** (offline, GPS-retrieval; NeurIPS 2023) on the laptop,
+   - **The Reader** (offline, symbolic): OCR → gazetteer, scripts, diacritics, phone codes, web domains,
+   - **a frontier vision model** (optional, cloud) with a strict JSON schema, 3 calls for a spread,
+   - **a street matcher** (offline, Attacker C): visual place recognition (EigenPlaces) over
+     geotagged street photos of the area, re-ranked by SuperPoint + LightGlue keypoints and
+     RANSAC — it pins the exact corner, and draws the real matched keypoints as lines.
+3. **Which clues gave you away** — every clue's contribution is **measured by ablation**
+   (erase only that clue, attack again, compare the 90% search area). The globe's
+   country→street collapse is real data: all clues erased, then restored one at a time.
+4. **Erase** — the least destructive fix per clue: glyph-level LaMa inpainting for signs
+   (the board stays, the words go), inpainting for landmarks/flags, blur for small text and
+   plates, softening for reflections. **The person is never altered** (eyes softened only) —
+   measured: face pixels changed = 0.
+5. **Re-attack** with different AIs — including an **adaptive** attacker that is *told
+   which pixels were edited* and zooms into everything left untouched — until every
+   attacker misses by more than the radius (default 25 km), or we say we couldn't.
+6. **Safe to post** — QR → the protected photo on your phone, plus a card: before/after
+   distance, search-area growth, % pixels changed, location data stripped.
+
+## How it works
+
+```mermaid
+flowchart LR
+  P[Phone: QR upload] --> E[Clue zero<br/>EXIF/GPS read + stripped]
+  E -->|pixels only| A{Attackers}
+  A --> B[GeoCLIP<br/>offline retrieval]
+  A --> R[The Reader<br/>offline OCR sleuth]
+  A --> C[Cloud VLM<br/>optional, JSON schema]
+  A --> SC[Street matcher<br/>EigenPlaces + LightGlue<br/>inside coverage only]
+  E --> F[Clue finder<br/>OCR + ClearCLIP dense map<br/>+ YuNet faces/eyes + VLM boxes]
+  B & R & C & SC --> H[H3 distributions<br/>90% credible area, error to truth]
+  F --> AB[Ablation per clue<br/>+ real collapse frames]
+  AB --> D[Defense loop<br/>glyph inpaint · blur · soften<br/>leak search · portrait blur]
+  D --> RA{Re-attack}
+  RA --> B2[GeoCLIP] & AD[GeoCLIP adaptive<br/>told what was edited] & R2[The Reader] & C2[Cloud VLM<br/>told it was edited] & S2[Street matcher]
+  RA -->|all miss > radius or K rounds| S[Safe-to-post card + QR download]
+```
+
+Distributions live on an **H3 grid** (one fixed resolution, so before/after areas are
+comparable); "credible area" = area of the smallest hexagon set holding 90% of the
+probability. Details and every trade-off: [DECISIONS.md](DECISIONS.md).
+
+## Results
+
+All numbers below are generated by scripts and injected with `scripts/update_readme.py` —
+nothing is hand-typed. "Can't be placed" always means **not within the radius, by the
+attackers listed**.
+
+### Benchmark — Im2GPS3k (`make bench`)
+
+<!-- BENCH:START -->
+_Run `make bench`._
+<!-- BENCH:END -->
+
+### Fixture photos (`scripts/run_fixtures.py`)
+
+<!-- FIXTURES:START -->
+_Run `python scripts/run_fixtures.py`._
+<!-- FIXTURES:END -->
+
+### Street-level pinpoint — when does a match count? (`bench/street_threshold.py`)
+
+Attacker C only claims a street-level match when the best reference photo shares at least
+**T** RANSAC-verified keypoints with yours, and only inside the downloaded coverage (whose size
+is always on screen). T is measured, not chosen: the smallest count above every out-of-coverage
+negative with ≥ 95% of in-coverage claims correct (leave-one-out).
+
+<!-- STREET:START -->
+_Not measured yet — run `bench/street_threshold.py`._
+<!-- STREET:END -->
+
+### Eye reflections — when can one actually be read? (`make iris`)
+
+Truth rule: we only *claim* an eye reflection is readable when the iris is large enough
+in pixels; below that, eyes (and sunglasses, windows, car bodies, mirrors) are flagged
+as **possible clues** and softened as a labeled precaution.
+
+<!-- IRIS:START -->
+_Not measured yet — run `make iris`._
+<!-- IRIS:END -->
+
+## Truth rules, and how the code enforces them
+
+| rule | enforcement |
+|---|---|
+| Location data is clue zero, never attack input | `exif.load_clean()` re-materializes pixels into a fresh image; attackers only receive that. Tested in `tests/test_exif.py`. |
+| Eye reflections only claimed above a measured threshold | `bench/iris_threshold.py` → `data/iris_threshold.json` → `clues/faces.py`. Unmeasured ⇒ never claimed. |
+| Every number is from this run | the web app only renders API state; counters animate between real values; README blocks are generated. |
+| Contributions by ablation, never invented | `ablation.py`: erase one clue → re-attack → `log10(area_without / area_with)`. |
+| "Can't be placed" = radius + attackers | `defense/loop.verdict()` always names both. |
+| No "locate any photo" mode; projector privacy | regions + distances by default, globe zoom floor, no pin; exact places only for public landmarks or owner's OK (M). |
+| The person is never altered | person mask hard-restored every round; `face_pixels_changed` measured (0 on every fixture). |
+| Photos stay on the laptop | only metadata-stripped, re-encoded JPEGs go to the optional cloud attacker; Shift+W / `/api/wipe` deletes everything. |
+
+## Limitations & ethics
+
+- **Dual use.** Showing what leaks is also a lesson in how to look. TRACELESS has no
+  "locate any photo" mode: it protects a photo you upload, shows the attack as a risk
+  report, and hides coordinates on the projector unless it's a public landmark.
+- **What it can't stop:** a human with extra context (your other posts, captions,
+  friends' photos, the time you posted), matching against your *other* photos, or a
+  future attacker stronger than the ones we tested. Results are "by the attackers we tested".
+- **Iconic scenes** (e.g. Dotonbori, the Champ de Mars) are landmarks *as a whole*; GeoCLIP's
+  Flickr-derived prior also favours famous places. We report "target not reached"
+  rather than wrecking the photo — the 35% repaint budget is a hard cap.
+- **Dense clue map is coarse** (14-px patches; ClearCLIP on CLIP-L instead of a separate
+  detector + SAM 2 — a disk-budget trade-off, see DECISIONS D3). Text masks are pixel-accurate.
+- Fixture photos are Wikimedia Commons uploads, some from Flickr, so retrieval models may
+  have seen near-duplicates; the benchmark uses the standard held-out Im2GPS3k set.
+
+## Prior art
+
+We checked for products that remove location clues from **image content** (not just
+metadata): Apple Photos' location controls, metadata-stripper apps, Proton's EXIF guide,
+Glaze/Fawkes (art/face cloaking) — all metadata-only or a different threat. **We found
+no consumer product that does this.** Research is active:
+
+- Mendes et al., *Granular Privacy Control for Geolocation with VLMs*, EMNLP 2024 — moderates model answers, not images.
+- Luo et al., *Doxing via the Lens*, ICLR 2026 — attack benchmark (DoxBench).
+- Liu et al., *GeoShield*, AAAI 2026 — adversarial noise against VLM geolocation.
+- Wang et al., *Hiding in Plain Sight*, NDSS 2027 — diffusion-latent perturbations (GeoCLIP as proxy).
+- Yan et al., *GeoEdit* (arXiv 2610.26194, Oct 2026) and Shi et al., *GeoShift* (arXiv 2610.30439, Oct 2026) — editing-based de-evidencing; the closest work.
+
+TRACELESS's angle: an end-to-end tool a person can use on the photo they're about to
+post, that runs **offline**, explains **which clue** gave them away with **measured**
+contributions, makes only **visible, auditable** edits (no adversarial noise that fools one
+model), and verifies against **different attacker families**, including one told what was edited.
+
+Geolocation models: GeoCLIP ([Vivanco et al., NeurIPS 2023](https://arxiv.org/abs/2309.16020)),
+PIGEON ([Haas et al., CVPR 2024](https://arxiv.org/abs/2307.05845)); benchmark Im2GPS3k
+([Vo, Jacobs & Hays, ICCV 2017](https://arxiv.org/abs/1705.04838)).
+
+## Built with Devin
+
+This repo runs a split-brain workflow (see [CLAUDE.md](CLAUDE.md)): **Claude Code** is
+the builder (all code, tests, benchmarks), **Devin** is the committer and reviewer — it
+watches for `DEVIN_COMMIT_READY:` handoffs, reviews each diff, and authors every commit.
+Lanes from the brief map to modules: attack (`attackers/`), defense + loop (`defense/`,
+`ablation.py`), frontend (`web/`), benchmark (`bench/`), hardening (`takes`, SIM mode,
+`SETUP.md`). See `git log` for the review trail.
+
+## Quickstart
+
+```bash
+make setup     # backend venv, model weights (~0.9 GB), web build
+make demo      # http://localhost:8000 — scan the QR with your phone, or click a SIM photo
+make test      # unit tests;  make test-golden  runs the full pipeline on every fixture
+make bench     # Im2GPS3k benchmark -> bench/results/ -> README
+```
+
+More: [SETUP.md](SETUP.md) (≤2-minute demo setup, Wi-Fi-off mode) · [DEMO.md](DEMO.md)
+(3-minute script) · [HARDWARE_TEST.md](HARDWARE_TEST.md) · [DECISIONS.md](DECISIONS.md).
+
+## Credits
+
+Fixture photos: Wikimedia Commons contributors — see [fixtures/ATTRIBUTION.md](fixtures/ATTRIBUTION.md).
+GeoCLIP (MIT), LaMa (Apache-2.0), RapidOCR / PaddleOCR (Apache-2.0), OpenCV YuNet (MIT),
+GeoNames (CC-BY 4.0), globe.gl (MIT), Natural Earth (public domain), EigenPlaces (MIT),
+LightGlue + SuperPoint (Apache-2.0 / research weights), Depth Anything V2 Small (Apache-2.0).
+Street reference photos: Mapillary contributors (CC BY-SA 4.0) when built from Mapillary;
+Wikimedia Commons contributors (per-file licenses, credited on screen) otherwise.

@@ -1,0 +1,438 @@
+{
+  "iris_readable_px": 96,
+  "found": true,
+  "criterion": "smallest iris diameter where >=50% of scenes are readable (GeoCLIP same place within 25 km, or OCR reads a scene word), holding for every larger size",
+  "simulation": "convex-mirror reflection, 65% over synthetic iris, JPEG q85, attacker upsamples 4x (attacker-favourable)",
+  "scenes": [
+    "madrid-jamon-shopfront",
+    "osaka-dotonbori-signs",
+    "cincinnati-main-st",
+    "paris-eiffel-tower",
+    "berlin-shopwindow-reflection",
+    "depew-suburban-street"
+  ],
+  "table": [
+    {
+      "iris_px": 8,
+      "readable_rate": 0.0,
+      "geoclip_rate": 0.0,
+      "ocr_rate": 0.0
+    },
+    {
+      "iris_px": 12,
+      "readable_rate": 0.0,
+      "geoclip_rate": 0.0,
+      "ocr_rate": 0.0
+    },
+    {
+      "iris_px": 16,
+      "readable_rate": 0.167,
+      "geoclip_rate": 0.167,
+      "ocr_rate": 0.0
+    },
+    {
+      "iris_px": 24,
+      "readable_rate": 0.167,
+      "geoclip_rate": 0.167,
+      "ocr_rate": 0.0
+    },
+    {
+      "iris_px": 32,
+      "readable_rate": 0.167,
+      "geoclip_rate": 0.167,
+      "ocr_rate": 0.0
+    },
+    {
+      "iris_px": 48,
+      "readable_rate": 0.167,
+      "geoclip_rate": 0.167,
+      "ocr_rate": 0.0
+    },
+    {
+      "iris_px": 64,
+      "readable_rate": 0.333,
+      "geoclip_rate": 0.333,
+      "ocr_rate": 0.0
+    },
+    {
+      "iris_px": 96,
+      "readable_rate": 0.5,
+      "geoclip_rate": 0.5,
+      "ocr_rate": 0.0
+    },
+    {
+      "iris_px": 128,
+      "readable_rate": 0.5,
+      "geoclip_rate": 0.5,
+      "ocr_rate": 0.0
+    },
+    {
+      "iris_px": 192,
+      "readable_rate": 0.667,
+      "geoclip_rate": 0.667,
+      "ocr_rate": 0.0
+    }
+  ],
+  "rows": [
+    {
+      "scene": "madrid-jamon-shopfront",
+      "iris_px": 8,
+      "geoclip_same_place": false,
+      "ocr_word": false
+    },
+    {
+      "scene": "madrid-jamon-shopfront",
+      "iris_px": 12,
+      "geoclip_same_place": false,
+      "ocr_word": false
+    },
+    {
+      "scene": "madrid-jamon-shopfront",
+      "iris_px": 16,
+      "geoclip_same_place": false,
+      "ocr_word": false
+    },
+    {
+      "scene": "madrid-jamon-shopfront",
+      "iris_px": 24,
+      "geoclip_same_place": false,
+      "ocr_word": false
+    },
+    {
+      "scene": "madrid-jamon-shopfront",
+      "iris_px": 32,
+      "geoclip_same_place": false,
+      "ocr_word": false
+    },
+    {
+      "scene": "madrid-jamon-shopfront",
+      "iris_px": 48,
+      "geoclip_same_place": false,
+      "ocr_word": false
+    },
+    {
+      "scene": "madrid-jamon-shopfront",
+      "iris_px": 64,
+      "geoclip_same_place": false,
+      "ocr_word": false
+    },
+    {
+      "scene": "madrid-jamon-shopfront",
+      "iris_px": 96,
+      "geoclip_same_place": false,
+      "ocr_word": false
+    },
+    {
+      "scene": "madrid-jamon-shopfront",
+      "iris_px": 128,
+      "geoclip_same_place": true,
+      "ocr_word": false
+    },
+    {
+      "scene": "madrid-jamon-shopfront",
+      "iris_px": 192,
+      "geoclip_same_place": true,
+      "ocr_word": false
+    },
+    {
+      "scene": "osaka-dotonbori-signs",
+      "iris_px": 8,
+      "geoclip_same_place": false,
+      "ocr_word": false
+    },
+    {
+      "scene": "osaka-dotonbori-signs",
+      "iris_px": 12,
+      "geoclip_same_place": false,
+      "ocr_word": false
+    },
+    {
+      "scene": "osaka-dotonbori-signs",
+      "iris_px": 16,
+      "geoclip_same_place": false,
+      "ocr_word": false
+    },
+    {
+      "scene": "osaka-dotonbori-signs",
+      "iris_px": 24,
+      "geoclip_same_place": false,
+      "ocr_word": false
+    },
+    {
+      "scene": "osaka-dotonbori-signs",
+      "iris_px": 32,
+      "geoclip_same_place": false,
+      "ocr_word": false
+    },
+    {
+      "scene": "osaka-dotonbori-signs",
+      "iris_px": 48,
+      "geoclip_same_place": false,
+      "ocr_word": false
+    },
+    {
+      "scene": "osaka-dotonbori-signs",
+      "iris_px": 64,
+      "geoclip_same_place": true,
+      "ocr_word": false
+    },
+    {
+      "scene": "osaka-dotonbori-signs",
+      "iris_px": 96,
+      "geoclip_same_place": true,
+      "ocr_word": false
+    },
+    {
+      "scene": "osaka-dotonbori-signs",
+      "iris_px": 128,
+      "geoclip_same_place": false,
+      "ocr_word": false
+    },
+    {
+      "scene": "osaka-dotonbori-signs",
+      "iris_px": 192,
+      "geoclip_same_place": true,
+      "ocr_word": false
+    },
+    {
+      "scene": "cincinnati-main-st",
+      "iris_px": 8,
+      "geoclip_same_place": false,
+      "ocr_word": false
+    },
+    {
+      "scene": "cincinnati-main-st",
+      "iris_px": 12,
+      "geoclip_same_place": false,
+      "ocr_word": false
+    },
+    {
+      "scene": "cincinnati-main-st",
+      "iris_px": 16,
+      "geoclip_same_place": false,
+      "ocr_word": false
+    },
+    {
+      "scene": "cincinnati-main-st",
+      "iris_px": 24,
+      "geoclip_same_place": false,
+      "ocr_word": false
+    },
+    {
+      "scene": "cincinnati-main-st",
+      "iris_px": 32,
+      "geoclip_same_place": false,
+      "ocr_word": false
+    },
+    {
+      "scene": "cincinnati-main-st",
+      "iris_px": 48,
+      "geoclip_same_place": false,
+      "ocr_word": false
+    },
+    {
+      "scene": "cincinnati-main-st",
+      "iris_px": 64,
+      "geoclip_same_place": false,
+      "ocr_word": false
+    },
+    {
+      "scene": "cincinnati-main-st",
+      "iris_px": 96,
+      "geoclip_same_place": true,
+      "ocr_word": false
+    },
+    {
+      "scene": "cincinnati-main-st",
+      "iris_px": 128,
+      "geoclip_same_place": true,
+      "ocr_word": false
+    },
+    {
+      "scene": "cincinnati-main-st",
+      "iris_px": 192,
+      "geoclip_same_place": true,
+      "ocr_word": false
+    },
+    {
+      "scene": "paris-eiffel-tower",
+      "iris_px": 8,
+      "geoclip_same_place": false,
+      "ocr_word": false
+    },
+    {
+      "scene": "paris-eiffel-tower",
+      "iris_px": 12,
+      "geoclip_same_place": false,
+      "ocr_word": false
+    },
+    {
+      "scene": "paris-eiffel-tower",
+      "iris_px": 16,
+      "geoclip_same_place": true,
+      "ocr_word": false
+    },
+    {
+      "scene": "paris-eiffel-tower",
+      "iris_px": 24,
+      "geoclip_same_place": true,
+      "ocr_word": false
+    },
+    {
+      "scene": "paris-eiffel-tower",
+      "iris_px": 32,
+      "geoclip_same_place": true,
+      "ocr_word": false
+    },
+    {
+      "scene": "paris-eiffel-tower",
+      "iris_px": 48,
+      "geoclip_same_place": true,
+      "ocr_word": false
+    },
+    {
+      "scene": "paris-eiffel-tower",
+      "iris_px": 64,
+      "geoclip_same_place": true,
+      "ocr_word": false
+    },
+    {
+      "scene": "paris-eiffel-tower",
+      "iris_px": 96,
+      "geoclip_same_place": true,
+      "ocr_word": false
+    },
+    {
+      "scene": "paris-eiffel-tower",
+      "iris_px": 128,
+      "geoclip_same_place": true,
+      "ocr_word": false
+    },
+    {
+      "scene": "paris-eiffel-tower",
+      "iris_px": 192,
+      "geoclip_same_place": true,
+      "ocr_word": false
+    },
+    {
+      "scene": "berlin-shopwindow-reflection",
+      "iris_px": 8,
+      "geoclip_same_place": false,
+      "ocr_word": false
+    },
+    {
+      "scene": "berlin-shopwindow-reflection",
+      "iris_px": 12,
+      "geoclip_same_place": false,
+      "ocr_word": false
+    },
+    {
+      "scene": "berlin-shopwindow-reflection",
+      "iris_px": 16,
+      "geoclip_same_place": false,
+      "ocr_word": false
+    },
+    {
+      "scene": "berlin-shopwindow-reflection",
+      "iris_px": 24,
+      "geoclip_same_place": false,
+      "ocr_word": false
+    },
+    {
+      "scene": "berlin-shopwindow-reflection",
+      "iris_px": 32,
+      "geoclip_same_place": false,
+      "ocr_word": false
+    },
+    {
+      "scene": "berlin-shopwindow-reflection",
+      "iris_px": 48,
+      "geoclip_same_place": false,
+      "ocr_word": false
+    },
+    {
+      "scene": "berlin-shopwindow-reflection",
+      "iris_px": 64,
+      "geoclip_same_place": false,
+      "ocr_word": false
+    },
+    {
+      "scene": "berlin-shopwindow-reflection",
+      "iris_px": 96,
+      "geoclip_same_place": false,
+      "ocr_word": false
+    },
+    {
+      "scene": "berlin-shopwindow-reflection",
+      "iris_px": 128,
+      "geoclip_same_place": false,
+      "ocr_word": false
+    },
+    {
+      "scene": "berlin-shopwindow-reflection",
+      "iris_px": 192,
+      "geoclip_same_place": false,
+      "ocr_word": false
+    },
+    {
+      "scene": "depew-suburban-street",
+      "iris_px": 8,
+      "geoclip_same_place": false,
+      "ocr_word": false
+    },
+    {
+      "scene": "depew-suburban-street",
+      "iris_px": 12,
+      "geoclip_same_place": false,
+      "ocr_word": false
+    },
+    {
+      "scene": "depew-suburban-street",
+      "iris_px": 16,
+      "geoclip_same_place": false,
+      "ocr_word": false
+    },
+    {
+      "scene": "depew-suburban-street",
+      "iris_px": 24,
+      "geoclip_same_place": false,
+      "ocr_word": false
+    },
+    {
+      "scene": "depew-suburban-street",
+      "iris_px": 32,
+      "geoclip_same_place": false,
+      "ocr_word": false
+    },
+    {
+      "scene": "depew-suburban-street",
+      "iris_px": 48,
+      "geoclip_same_place": false,
+      "ocr_word": false
+    },
+    {
+      "scene": "depew-suburban-street",
+      "iris_px": 64,
+      "geoclip_same_place": false,
+      "ocr_word": false
+    },
+    {
+      "scene": "depew-suburban-street",
+      "iris_px": 96,
+      "geoclip_same_place": false,
+      "ocr_word": false
+    },
+    {
+      "scene": "depew-suburban-street",
+      "iris_px": 128,
+      "geoclip_same_place": false,
+      "ocr_word": false
+    },
+    {
+      "scene": "depew-suburban-street",
+      "iris_px": 192,
+      "geoclip_same_place": false,
+      "ocr_word": false
+    }
+  ]
+}
