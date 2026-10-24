@@ -430,8 +430,26 @@ if WEB_DIST.exists():
         return FileResponse(WEB_DIST / "index.html")
 
 
+def _free_port(start: int) -> int:
+    """A stale socket must never kill the demo: fall back to the next free port."""
+    for p in range(start, start + 20):
+        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+            try:
+                s.bind(("0.0.0.0", p))
+                return p
+            except OSError:
+                continue
+    return start
+
+
 def main():
-    uvicorn.run(app, host="0.0.0.0", port=PORT, log_level="warning")
+    global PORT
+    port = _free_port(PORT)
+    if port != PORT:
+        print(f"!! port {PORT} is busy — serving on {port} instead")
+    PORT = port
+    print(f"TRACELESS → http://localhost:{port}   (phones: {base_url()})", flush=True)
+    uvicorn.run(app, host="0.0.0.0", port=port, log_level="warning")
 
 
 if __name__ == "__main__":

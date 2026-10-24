@@ -20,7 +20,7 @@ MODEL_DIR = WEIGHTS_DIR / "depth-anything-v2-small"  # fetched by scripts/fetch_
 os.environ.setdefault("HF_HUB_OFFLINE", "1")  # never let the hub client touch the network at demo time
 
 _PIPE = None
-_LOCK = threading.Lock()
+_LOCK = threading.RLock()  # depth_png holds it while calling _pipe()
 
 
 def _pipe():

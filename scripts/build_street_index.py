@@ -149,7 +149,13 @@ def main() -> None:
         items = from_mapillary(args.lat, args.lon, args.radius_km, args.max, token)
     else:
         items = from_commons(args.lat, args.lon, args.radius_km, args.max)
-        items = [i for i in items if i.get("title") not in set(args.exclude_title)]
+        # never index our own fixture photos: matching a photo against itself is not a street match
+        man = json.loads((ROOT / "fixtures" / "manifest.json").read_text(encoding="utf-8"))
+        own = {"File:" + m["commons_url"].rsplit("File:", 1)[-1] for m in man if "File:" in m.get("commons_url", "")}
+        from urllib.parse import unquote
+
+        own = {unquote(t).replace("_", " ") for t in own}
+        items = [i for i in items if i.get("title") not in set(args.exclude_title) | own]
     print(f"{len(items)} {source} images listed in {time.time() - t0:.0f}s")
 
     root = ROOT / "models" / "weights" / "street" / args.name

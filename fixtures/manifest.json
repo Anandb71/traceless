@@ -1,5 +1,21 @@
 [
   {
+    "id": "abergavenny-book-shop",
+    "file": "photos/abergavenny-book-shop.jpg",
+    "title": "File:The Book Shop in Abergavenny - geograph.org.uk - 4400614.jpg",
+    "commons_url": "https://commons.wikimedia.org/wiki/File:The_Book_Shop_in_Abergavenny_-_geograph.org.uk_-_4400614.jpg",
+    "author": "peter robinson",
+    "license": "CC BY-SA 2.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/2.0",
+    "lat": 51.821827,
+    "lon": -3.018467,
+    "place": "Abergavenny, Monmouthshire, Wales, UK",
+    "category": "street_text",
+    "public_landmark": false,
+    "indoor": false,
+    "notes": "Prepared demo photo: ordinary high street the offline attackers place within 25 km and TRACELESS protects. Corner bookshop whose fascia names the town; Cancer Research UK charity shop, 'TO LET' sign."
+  },
+  {
     "id": "madrid-jamon-shopfront",
     "file": "photos/madrid-jamon-shopfront.jpg",
     "title": "El paraíso del jamón",
