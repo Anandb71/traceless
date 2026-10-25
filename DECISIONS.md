@@ -200,3 +200,21 @@ matcher found a *different* photo of the same shop: 147 inliers (T = 55),
 170 m away — a real Shot 4. Separately, a killed server left an orphaned
 listening socket on :8000; the server now falls back to the next free port
 and prints the URL instead of crashing.
+
+### D26 · CLOAK measured: strong white-box, no cross-family transfer → README only
+PGD (30 steps, ε 2/255 and 4/255) against GeoCLIP's encoder over its own three
+views moved GeoCLIP far on all 10 outdoor-ish fixtures (LPIPS 0.004–0.08). The
+adaptive attacker (same model, unoptimized close-up crops) was NOT fooled on
+Osaka (0.01 km) and Cincinnati (0.43 km) at 2/255. Against other families,
+zero transfer: on Madrid the street matcher kept 137–141 inliers and its 170 m
+pinpoint; The Reader was unchanged. So CLOAK stays out of the product and
+goes in the README as evidence for visible, model-agnostic erasure.
+
+### D26 · CLOAK measured, not shipped; benchmark version pinned
+CLOAK (PGD on GeoCLIP, ε 2–4/255) moved white-box GeoCLIP hundreds to thousands
+of km at LPIPS ≤ 0.08, including the memorised scenes — but its only "transfer"
+test is the same model through other crops (partial), so it is a README footnote,
+not the protection. The README benchmark tables are from the 03:47 run (before
+the cities5000 Reader and the street matcher); a re-run alongside the demo
+server ran at ~90 s/photo on the shared 6 GB GPU and was stopped. Labelled as
+such in the README; `make bench` on an idle GPU reproduces it.

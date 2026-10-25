@@ -1,0 +1,244 @@
+{
+ "geoclip": [
+  {
+   "id": "abergavenny-book-shop",
+   "eps": "2/255",
+   "geoclip_before_km": 20.57,
+   "geoclip_after_km": 474.64,
+   "adaptive_before_km": 20.57,
+   "adaptive_after_km": 474.64,
+   "lpips": 0.0074,
+   "ssim": 0.9917,
+   "pct_pixels_changed": 0.0
+  },
+  {
+   "id": "abergavenny-book-shop",
+   "eps": "4/255",
+   "geoclip_before_km": 20.57,
+   "geoclip_after_km": 474.64,
+   "adaptive_before_km": 20.57,
+   "adaptive_after_km": 474.64,
+   "lpips": 0.0252,
+   "ssim": 0.9729,
+   "pct_pixels_changed": 80.55
+  },
+  {
+   "id": "madrid-jamon-shopfront",
+   "eps": "2/255",
+   "geoclip_before_km": 0.95,
+   "geoclip_after_km": 505.9,
+   "adaptive_before_km": 0.95,
+   "adaptive_after_km": 505.82,
+   "lpips": 0.0041,
+   "ssim": 0.9947,
+   "pct_pixels_changed": 0.0
+  },
+  {
+   "id": "madrid-jamon-shopfront",
+   "eps": "4/255",
+   "geoclip_before_km": 0.95,
+   "geoclip_after_km": 505.9,
+   "adaptive_before_km": 0.95,
+   "adaptive_after_km": 505.82,
+   "lpips": 0.0121,
+   "ssim": 0.9835,
+   "pct_pixels_changed": 85.78
+  },
+  {
+   "id": "osaka-dotonbori-signs",
+   "eps": "2/255",
+   "geoclip_before_km": 0.01,
+   "geoclip_after_km": 397.41,
+   "adaptive_before_km": 0.01,
+   "adaptive_after_km": 0.01,
+   "lpips": 0.0117,
+   "ssim": 0.9915,
+   "pct_pixels_changed": 0.0
+  },
+  {
+   "id": "osaka-dotonbori-signs",
+   "eps": "4/255",
+   "geoclip_before_km": 0.01,
+   "geoclip_after_km": 397.41,
+   "adaptive_before_km": 0.01,
+   "adaptive_after_km": 0.21,
+   "lpips": 0.0342,
+   "ssim": 0.9726,
+   "pct_pixels_changed": 78.69
+  },
+  {
+   "id": "cincinnati-main-st",
+   "eps": "2/255",
+   "geoclip_before_km": 0.26,
+   "geoclip_after_km": 1052.27,
+   "adaptive_before_km": 0.43,
+   "adaptive_after_km": 0.43,
+   "lpips": 0.0061,
+   "ssim": 0.9941,
+   "pct_pixels_changed": 0.0
+  },
+  {
+   "id": "cincinnati-main-st",
+   "eps": "4/255",
+   "geoclip_before_km": 0.26,
+   "geoclip_after_km": 1051.89,
+   "adaptive_before_km": 0.43,
+   "adaptive_after_km": 1051.89,
+   "lpips": 0.0179,
+   "ssim": 0.9806,
+   "pct_pixels_changed": 80.83
+  },
+  {
+   "id": "paris-eiffel-tower",
+   "eps": "2/255",
+   "geoclip_before_km": 0.23,
+   "geoclip_after_km": 8750.76,
+   "adaptive_before_km": 0.26,
+   "adaptive_after_km": 0.25,
+   "lpips": 0.0217,
+   "ssim": 0.9889,
+   "pct_pixels_changed": 0.0
+  },
+  {
+   "id": "paris-eiffel-tower",
+   "eps": "4/255",
+   "geoclip_before_km": 0.23,
+   "geoclip_after_km": 8750.76,
+   "adaptive_before_km": 0.26,
+   "adaptive_after_km": 8750.76,
+   "lpips": 0.0772,
+   "ssim": 0.9567,
+   "pct_pixels_changed": 74.98
+  },
+  {
+   "id": "iowa-rural-blacktop",
+   "eps": "2/255",
+   "geoclip_before_km": 307.1,
+   "geoclip_after_km": 1595.11,
+   "adaptive_before_km": 307.1,
+   "adaptive_after_km": 189.5,
+   "lpips": 0.0049,
+   "ssim": 0.9924,
+   "pct_pixels_changed": 0.0
+  },
+  {
+   "id": "iowa-rural-blacktop",
+   "eps": "4/255",
+   "geoclip_before_km": 307.1,
+   "geoclip_after_km": 1599.28,
+   "adaptive_before_km": 307.1,
+   "adaptive_after_km": 768.95,
+   "lpips": 0.0162,
+   "ssim": 0.9757,
+   "pct_pixels_changed": 83.21
+  },
+  {
+   "id": "bigsur-pfeiffer-beach",
+   "eps": "2/255",
+   "geoclip_before_km": 0.04,
+   "geoclip_after_km": 7039.55,
+   "adaptive_before_km": 0.04,
+   "adaptive_after_km": 7039.55,
+   "lpips": 0.0121,
+   "ssim": 0.992,
+   "pct_pixels_changed": 0.0
+  },
+  {
+   "id": "bigsur-pfeiffer-beach",
+   "eps": "4/255",
+   "geoclip_before_km": 0.04,
+   "geoclip_after_km": 8139.07,
+   "adaptive_before_km": 0.04,
+   "adaptive_after_km": 8139.07,
+   "lpips": 0.0387,
+   "ssim": 0.9732,
+   "pct_pixels_changed": 75.67
+  },
+  {
+   "id": "berlin-shopwindow-reflection",
+   "eps": "2/255",
+   "geoclip_before_km": 424.73,
+   "geoclip_after_km": 1950.2,
+   "adaptive_before_km": 635.23,
+   "adaptive_after_km": 1950.2,
+   "lpips": 0.0204,
+   "ssim": 0.9947,
+   "pct_pixels_changed": 0.0
+  },
+  {
+   "id": "berlin-shopwindow-reflection",
+   "eps": "4/255",
+   "geoclip_before_km": 424.73,
+   "geoclip_after_km": 1950.27,
+   "adaptive_before_km": 635.23,
+   "adaptive_after_km": 1950.27,
+   "lpips": 0.0573,
+   "ssim": 0.9825,
+   "pct_pixels_changed": 76.67
+  },
+  {
+   "id": "tyumen-portrait",
+   "eps": "2/255",
+   "geoclip_before_km": 2385.4,
+   "geoclip_after_km": 11011.24,
+   "adaptive_before_km": 2359.81,
+   "adaptive_after_km": 11011.24,
+   "lpips": 0.0097,
+   "ssim": 0.9878,
+   "pct_pixels_changed": 0.0
+  },
+  {
+   "id": "tyumen-portrait",
+   "eps": "4/255",
+   "geoclip_before_km": 2385.4,
+   "geoclip_after_km": 11265.38,
+   "adaptive_before_km": 2359.81,
+   "adaptive_after_km": 11265.38,
+   "lpips": 0.0398,
+   "ssim": 0.9572,
+   "pct_pixels_changed": 75.1
+  },
+  {
+   "id": "depew-suburban-street",
+   "eps": "2/255",
+   "geoclip_before_km": 306.95,
+   "geoclip_after_km": 230.58,
+   "adaptive_before_km": 327.42,
+   "adaptive_after_km": 230.58,
+   "lpips": 0.0042,
+   "ssim": 0.9959,
+   "pct_pixels_changed": 0.0
+  },
+  {
+   "id": "depew-suburban-street",
+   "eps": "4/255",
+   "geoclip_before_km": 306.95,
+   "geoclip_after_km": 3169.03,
+   "adaptive_before_km": 327.42,
+   "adaptive_after_km": 3169.03,
+   "lpips": 0.0134,
+   "ssim": 0.9855,
+   "pct_pixels_changed": 80.2
+  }
+ ],
+ "transfer": [
+  {
+   "variant": "original",
+   "street_inliers": 137,
+   "street_km": 0.17,
+   "reader_km": 8019.68
+  },
+  {
+   "variant": "cloak 2/255",
+   "street_inliers": 141,
+   "street_km": 0.17,
+   "reader_km": 8019.68
+  },
+  {
+   "variant": "cloak 4/255",
+   "street_inliers": 138,
+   "street_km": 0.17,
+   "reader_km": 8019.68
+  }
+ ]
+}

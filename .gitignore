@@ -24,7 +24,10 @@ coverage/
 # local scratch / runtime
 .scratch/
 sessions/
-takes/
+takes/*
+!takes/abergavenny-book-shop/
+!takes/madrid-jamon-shopfront/
+!takes/indoor-sunny-apartment/
 bench/data/im2gps3k/
 bench/runs/
 bench/data/*.zip

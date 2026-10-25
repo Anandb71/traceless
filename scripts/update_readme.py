@@ -58,6 +58,8 @@ def main() -> None:
     text = block("BENCH", tables.read_text(encoding="utf-8") if tables.exists() else "_Run `make bench`._", text)
     text = block("IRIS", iris_md(), text)
     text = block("STREET", street_md(), text)
+    ck = ROOT / "bench" / "results" / "CLOAK.md"
+    text = block("CLOAK", ck.read_text(encoding="utf-8") if ck.exists() else "_Run `bench/cloak.py`._", text)
     fx = ROOT / "bench" / "results" / "fixtures.md"
     text = block("FIXTURES", fx.read_text(encoding="utf-8") if fx.exists() else "_Run `python scripts/run_fixtures.py`._", text)
     README.write_text(text, encoding="utf-8")

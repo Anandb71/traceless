@@ -103,7 +103,8 @@ export default function Bench() {
         </div>
       ))}
       {b.failures.length > 0 && <div className="muted">Failures: {b.failures.length} (listed in bench/results/latest.json)</div>}
-      <p className="muted">“Can't be placed” = not within {b.radius_km} km, by the attackers listed. No cherry-picking: every photo in the subset is counted.</p>
+      <p className="muted">“Can't be placed” = not within {b.radius_km} km, by the attackers listed. No cherry-picking: every photo in the subset is counted.
+        The Reader row predates its gazetteer upgrade (cities15000 → cities5000).</p>
     </div>
   );
 }

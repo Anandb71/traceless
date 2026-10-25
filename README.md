@@ -85,6 +85,12 @@ attackers listed**.
 
 ### Benchmark — Im2GPS3k (`make bench`)
 
+_Code version: these tables come from the 03:47 run — GeoCLIP, GeoCLIP-adaptive and The Reader
+on the cities15000 gazetteer. They predate the cities5000 Reader upgrade (D24) and the street
+matcher, so The Reader row likely understates it on small-town signs. A re-run on the current
+code was started but stopped: with the demo server sharing the 6 GB GPU it ran at ~90 s/photo.
+`make bench` reproduces it on an idle GPU (~45 min)._
+
 Offline attackers only (the cloud attacker costs credits; Attacker C needs street coverage
 of each test location, which Im2GPS3k's worldwide photos don't have). "Already hard to
 place" photos are counted with after = before. Honest reading: protection cuts
@@ -168,6 +174,53 @@ Measured threshold: **96 px** iris diameter (found). Criterion: smallest iris di
 | 128 px | 50% | 50% | 0% |
 | 192 px | 67% | 67% | 0% |
 <!-- IRIS:END -->
+
+### CLOAK — what invisible adversarial noise does (`bench/cloak.py`, README-only)
+
+PGD on GeoCLIP's image encoder (30 steps, L∞ ε = 2/255 and 4/255), pushing probability away
+from GeoCLIP's own first guess. Against the model it was optimised on it is devastating and
+invisible (LPIPS ≤ 0.08) — even the "memorised" famous scenes move thousands of km. But read
+the second column carefully: the "adaptive" attacker is the *same model* looking through
+different crops, and the noise only partly survives that; it says nothing about a different
+model family (a cloud VLM, a street matcher, a human). That is why TRACELESS ships visible,
+auditable erasure as the protection and keeps CLOAK as a measured footnote.
+
+<!-- CLOAK:START -->
+| photo | ε | GeoCLIP (white-box) | GeoCLIP adaptive (transfer) | LPIPS | SSIM |
+|---|---|---|---|---|---|
+| abergavenny-book-shop | 2/255 | 21 km → **475 km** | 21 km → **475 km** | 0.0074 | 0.9917 |
+| abergavenny-book-shop | 4/255 | 21 km → **475 km** | 21 km → **475 km** | 0.0252 | 0.9729 |
+| madrid-jamon-shopfront | 2/255 | 0.9 km → **506 km** | 0.9 km → **506 km** | 0.0041 | 0.9947 |
+| madrid-jamon-shopfront | 4/255 | 0.9 km → **506 km** | 0.9 km → **506 km** | 0.0121 | 0.9835 |
+| osaka-dotonbori-signs | 2/255 | 0.0 km → **397 km** | 0.0 km → **0.0 km** | 0.0117 | 0.9915 |
+| osaka-dotonbori-signs | 4/255 | 0.0 km → **397 km** | 0.0 km → **0.2 km** | 0.0342 | 0.9726 |
+| cincinnati-main-st | 2/255 | 0.3 km → **1,052 km** | 0.4 km → **0.4 km** | 0.0061 | 0.9941 |
+| cincinnati-main-st | 4/255 | 0.3 km → **1,052 km** | 0.4 km → **1,052 km** | 0.0179 | 0.9806 |
+| paris-eiffel-tower | 2/255 | 0.2 km → **8,751 km** | 0.3 km → **0.2 km** | 0.0217 | 0.9889 |
+| paris-eiffel-tower | 4/255 | 0.2 km → **8,751 km** | 0.3 km → **8,751 km** | 0.0772 | 0.9567 |
+| iowa-rural-blacktop | 2/255 | 307 km → **1,595 km** | 307 km → **190 km** | 0.0049 | 0.9924 |
+| iowa-rural-blacktop | 4/255 | 307 km → **1,599 km** | 307 km → **769 km** | 0.0162 | 0.9757 |
+| bigsur-pfeiffer-beach | 2/255 | 0.0 km → **7,040 km** | 0.0 km → **7,040 km** | 0.0121 | 0.992 |
+| bigsur-pfeiffer-beach | 4/255 | 0.0 km → **8,139 km** | 0.0 km → **8,139 km** | 0.0387 | 0.9732 |
+| berlin-shopwindow-reflection | 2/255 | 425 km → **1,950 km** | 635 km → **1,950 km** | 0.0204 | 0.9947 |
+| berlin-shopwindow-reflection | 4/255 | 425 km → **1,950 km** | 635 km → **1,950 km** | 0.0573 | 0.9825 |
+| tyumen-portrait | 2/255 | 2,385 km → **11,011 km** | 2,360 km → **11,011 km** | 0.0097 | 0.9878 |
+| tyumen-portrait | 4/255 | 2,385 km → **11,265 km** | 2,360 km → **11,265 km** | 0.0398 | 0.9572 |
+| depew-suburban-street | 2/255 | 307 km → **231 km** | 327 km → **231 km** | 0.0042 | 0.9959 |
+| depew-suburban-street | 4/255 | 307 km → **3,169 km** | 327 km → **3,169 km** | 0.0134 | 0.9855 |
+<!-- CLOAK:END -->
+
+### Why not just invisible adversarial noise? (CLOAK, `bench/cloak.py`)
+
+We built it and measured it. PGD on GeoCLIP's image encoder (30 steps, L∞ ε = 2/255 or
+4/255) moves **GeoCLIP itself** hundreds to thousands of km on every fixture at LPIPS ≈ 0.01
+(e.g. Madrid 0.95 → 506 km, Eiffel Tower 0.23 → 8,751 km). But it is brittle:
+the same model's adaptive close-up crops still placed Osaka at 0.01 km and Cincinnati at
+0.43 km at ε = 2/255, and against a **different model family** it does nothing — the street
+matcher still pins Madrid 170 m away with ~140 verified keypoints, and The Reader still
+reads the signs. Noise fools the model it was tuned on; erasing the clue removes it for
+everyone. Full table: [bench/results/CLOAK.md](bench/results/CLOAK.md). (At ε = 2/255 the
+"pixels changed" metric reads 0% because its threshold is > 2/255 — the noise is below it.)
 
 ## Truth rules, and how the code enforces them
 
