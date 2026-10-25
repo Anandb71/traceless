@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { api } from "./api";
+import { FLAGS } from "./flags";
 import type { AttackResult, Fixture, Health, HexCell, SessionState } from "./types";
 import GlobeView, { type GlobeMarker } from "./components/GlobeView";
 import PhotoStage, { type PhotoMode } from "./components/PhotoStage";
@@ -108,6 +109,13 @@ export default function App() {
   // ---- deep link: ?take=<name>&step=<step>&frame=<n> (README screenshots, rehearsal) ----
   useEffect(() => {
     const q = new URLSearchParams(location.search);
+    const live = q.get("sid");
+    if (live) {
+      setSid(live);
+      const s0 = q.get("step") as Step | null;
+      setStep(s0 && STEPS.includes(s0) ? s0 : "zero");
+      return;
+    }
     const take = q.get("take");
     if (!take) return;
     api
@@ -235,7 +243,32 @@ export default function App() {
   const lastRound = st?.defense?.rounds?.[st.defense.rounds.length - 1];
   const after = useMemo(() => worst(lastRound?.attacks ?? []), [lastRound]);
 
+  // ---- TAP_REMOVE (flag "tap"): erase one clue at a time, measured offline re-attack ----
+  const [tap, setTap] = useState<{ img: string | null; attack: AttackResult | null; removed: string[]; busy: boolean; pct: number | null; done: boolean }>({ img: null, attack: null, removed: [], busy: false, pct: null, done: false });
+  useEffect(() => setTap({ img: null, attack: null, removed: [], busy: false, pct: null, done: false }), [sid]);
+  const tapMode = FLAGS.tap && step === "erase" && !replay && !!sid && st?.stage === "done" && !st.already_safe && !tap.done;
+  const onTap = useCallback(
+    async (clue: string) => {
+      if (!sid || tap.busy || tap.removed.includes(clue)) return;
+      if (st?.clues?.find((c) => c.id === clue)?.planned_fix === "none") {
+        flash("Too big to erase without changing the moment — we tell you instead");
+        return;
+      }
+      setTap((t) => ({ ...t, busy: true }));
+      sound.shatter();
+      try {
+        const r = await api.tap(sid, clue);
+        setTap((t) => ({ ...t, busy: false, img: r.image_url + `?v=${r.tapped.length}`, attack: r.attack, removed: r.tapped, pct: r.pct_pixels_changed }));
+      } catch (e) {
+        setTap((t) => ({ ...t, busy: false }));
+        flash(`Tap failed: ${e}`);
+      }
+    },
+    [sid, tap.busy, tap.removed, st?.clues],
+  );
+
   const shownAttack: AttackResult | undefined = (() => {
+    if (tapMode && tap.attack) return tap.attack;
     if (step === "attack") {
       if (frames.length && frame >= 0) return frames[Math.min(frame, frames.length - 1)].attack;
       return base;
@@ -340,15 +373,16 @@ export default function App() {
             />
           ) : st?.image ? (
             <PhotoStage
-              src={st.image.url}
+              src={tapMode && tap.img ? tap.img : st.image.url}
+              onClueClick={tapMode ? onTap : undefined}
               protectedSrc={st.protected?.url}
               maskSrc={st.protected?.mask_url}
               w={st.image.w}
               h={st.image.h}
               clues={st.clues ?? []}
-              visible={visible}
+              visible={tapMode ? new Set([...visible].filter((v) => !tap.removed.includes(v))) : visible}
               highlight={highlight}
-              mode={photoMode}
+              mode={tapMode ? "original" : photoMode}
               faces={st.defense?.protected}
               showFaces={step === "erase" || step === "reattack"}
               scanning={step === "attack" && (!frames.length || frame < frames.length - 1)}
@@ -366,7 +400,26 @@ export default function App() {
                 Protect my photo
               </button>
             )}
-            {step === "erase" && <ErasePanel st={st} />}
+            {step === "erase" && !tapMode && <ErasePanel st={st} />}
+            {tapMode && (
+              <div className="tap-panel">
+                <div className="kicker">Protect · tap a clue to remove it</div>
+                <h2>{tap.busy ? "Removing…" : tap.removed.length ? `${tap.removed.length} removed — watch the number.` : "Tap any numbered box."}</h2>
+                {tap.pct != null && <div className="muted">photo change so far {tap.pct.toFixed(1)}% · your face untouched</div>}
+                {(() => {
+                  const last = st?.clues?.find((c) => c.id === tap.removed[tap.removed.length - 1]);
+                  const ct = last?.contribution;
+                  return last ? (
+                    <div className="muted">
+                      Clue {last.index}: {ct ? `alone it made the search area ×${Math.pow(10, ct.gain).toFixed(1)} smaller (measured earlier)` : "a precaution — not measured"}
+                    </div>
+                  ) : null;
+                })()}
+                <button className="protect-btn" disabled={tap.busy} onClick={() => { setTap((t) => ({ ...t, done: true })); setStep("reattack"); }}>
+                  Remove the rest
+                </button>
+              </div>
+            )}
             {step === "reattack" && <ReattackPanel st={st} />}
             {step === "safe" && <SafeCard st={st} />}
           </div>
@@ -380,7 +433,14 @@ export default function App() {
             tone={step === "reattack" || step === "safe" || st?.already_safe ? "safe" : "threat"}
             transitionMs={step === "attack" ? FRAME_MS - 100 : 1600}
           />
-          <Readout step={step} st={st} attack={shownAttack} frame={frame} frames={frames.length} />
+          <Readout
+            step={step}
+            st={st}
+            attack={shownAttack}
+            frame={frame}
+            frames={frames.length}
+            note={tapMode ? (tap.attack ? "fast check (offline model)" : "before removal · tap a clue") : step === "reattack" || step === "safe" ? "all attackers" : undefined}
+          />
           {step === "attack" && <Rationale st={st} onActive={setActiveIds} />}
         </section>
       </div>

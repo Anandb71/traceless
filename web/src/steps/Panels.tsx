@@ -84,7 +84,7 @@ function AttackerRow({ a, before }: { a: AttackResult; before?: AttackResult }) 
       <span className="atag">{tag}</span>
       <span className="aval">
         {before && before.distance_km != null && <s>{km(before.distance_km)}</s>}
-        {a.distance_km == null ? (a.error ?? "no guess") : km(a.distance_km)}
+        {a.distance_km == null ? plainError(a.error) : km(a.distance_km)}
       </span>
     </div>
   );
@@ -124,7 +124,7 @@ export function CluesPanel({ st, highlight }: { st: SessionState | null; highlig
           );
         })}
       </div>
-      <div className="foot">×N = how many times larger the 90% search area gets when that clue alone is erased.</div>
+      <div className="foot">×N = how many times bigger the search area gets when we erase just that clue.</div>
     </div>
   );
 }
@@ -146,20 +146,20 @@ export function ErasePanel({ st }: { st: SessionState | null }) {
         ))}
       </div>
       {q && (
-        <div className="qrow">
-          <span>
-            <b>{q.pct_pixels_changed.toFixed(1)}%</b> pixels changed
-          </span>
-          <span>
-            SSIM <b>{q.ssim?.toFixed(3) ?? "—"}</b>
-          </span>
-          <span>
-            LPIPS <b>{q.lpips?.toFixed(3) ?? "—"}</b>
-          </span>
-          <span>
-            face pixels changed <b>{q.face_pixels_changed}</b>
-          </span>
-        </div>
+        <>
+          <div className="qrow">
+            <span>
+              photo change <b>{q.pct_pixels_changed.toFixed(1)}%</b>
+            </span>
+            <span>
+              your face <b>{q.face_pixels_changed === 0 ? "untouched" : `${q.face_pixels_changed} px changed`}</b>
+            </span>
+          </div>
+          <details className="tech">
+            <summary>technical details</summary>
+            SSIM {q.ssim?.toFixed(3) ?? "—"} · LPIPS {q.lpips?.toFixed(3) ?? "—"} · {q.pct_pixels_masked.toFixed(1)}% of pixels inside edit masks
+          </details>
+        </>
       )}
     </div>
   );
@@ -187,4 +187,13 @@ export function ReattackPanel({ st }: { st: SessionState | null }) {
 
 export function best(rs: AttackResult[]): AttackResult | undefined {
   return rs.filter((r) => r.status === "ok" && r.distance_km != null).sort((a, b) => a.distance_km! - b.distance_km!)[0];
+}
+
+/** Stage wording for an attacker that made no guess (technical text stays in the API/README). */
+function plainError(e: string | null): string {
+  if (!e) return "no guess";
+  const m = e.match(/best (\d+) inliers < (\d+) needed/);
+  if (m) return `no street match (strength ${m[1]}, needs ${m[2]})`;
+  if (e.startsWith("nothing readable")) return "nothing readable";
+  return e;
 }

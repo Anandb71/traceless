@@ -289,3 +289,12 @@ td { font-family: var(--mono); }
 .sheet-action.hot span { font-size: 12px; color: var(--mute); }
 .future-copy h1 { font: 700 72px/1.04 var(--display); letter-spacing: -.03em; margin: 12px 0 18px; }
 .future-copy h1 em { font-style: normal; color: var(--teal); }
+
+.tech { margin-top: 8px; font: 500 12px var(--mono); color: var(--dim); }
+.tech summary { cursor: pointer; color: var(--mute); }
+.card-line { font: 700 30px var(--display); margin: 2px 0 6px; }
+.card-line b { font-family: var(--mono); }
+
+.clue-box.tappable { cursor: pointer; pointer-events: auto; }
+.clue-box.tappable:hover { box-shadow: 0 0 0 4px color-mix(in srgb, var(--c) 50%, transparent), 0 0 36px var(--c); }
+.tap-panel h2 { margin: 6px 0; }

@@ -60,6 +60,10 @@ class Session:
         }
         self.arr: np.ndarray | None = None
         self.protected: np.ndarray | None = None
+        self.ctx = None  # AttackContext of the run (tap-to-remove re-uses it)
+        self.tap_arr: np.ndarray | None = None  # cumulative image with tapped clues erased
+        self.tapped: list[str] = []
+        self.tap_lock = threading.Lock()
 
     # ------------------------------------------------------------------ #
     def set(self, **kw):
@@ -128,6 +132,7 @@ class Session:
         # ---- attack (pixels only) + clue finding ------------------------
         t0 = time.time()
         ctx = AttackContext(truth=truth, radius_km=self.radius_km, variant="original", precise_regions=precise)
+        self.ctx = ctx
         cloud = CloudAttacker()
         geo, reader = GeoCLIPAttacker(), ReaderAttacker()
         import concurrent.futures as cf
@@ -229,6 +234,37 @@ class Session:
         self._timed("total", T)
 
     # ------------------------------------------------------------------ #
+    def tap(self, clue_id: str) -> dict:
+        """TAP_REMOVE: erase ONE clue (its existing fix, its mask only) and re-attack with
+        offline GeoCLIP. Returns the measured result; nothing is estimated."""
+        from .ablation import apply_fix
+
+        cs = getattr(self, "clueset", None)
+        if cs is None or self.arr is None or self.ctx is None:
+            raise RuntimeError("clues not ready")
+        cand = next((c for c in cs.candidates if c.clue.id == clue_id), None)
+        if cand is None:
+            raise KeyError(clue_id)
+        if cand.fix == "none":
+            raise RuntimeError("too big to erase without changing the moment")
+        with self.tap_lock:
+            base = self.arr if self.tap_arr is None else self.tap_arr
+            cur = apply_fix(base, cand) if clue_id not in self.tapped else base
+            cur = cur.copy()
+            cur[cs.person_mask] = self.arr[cs.person_mask]  # truth rule 6
+            self.tap_arr = cur
+            if clue_id not in self.tapped:
+                self.tapped.append(clue_id)
+            name = f"tap_{len(self.tapped)}.jpg"
+            self.save_img(cur, name)
+            ctx = AttackContext(truth=self.ctx.truth, radius_km=self.radius_km, variant=f"tap:{clue_id}",
+                                precise_regions=self.ctx.precise_regions)
+            r = GeoCLIPAttacker().attack(Image.fromarray(cur), ctx)
+            changed = float(np.mean(np.any(np.abs(cur.astype(np.int16) - self.arr.astype(np.int16)) > 2, axis=-1)) * 100)
+        return {"clue_id": clue_id, "tapped": list(self.tapped), "image_url": self.url(name),
+                "attack": r.model_dump(), "pct_pixels_changed": round(changed, 2),
+                "label": "fast check (offline model)"}
+
     def delete(self):
         shutil.rmtree(self.dir, ignore_errors=True)
 

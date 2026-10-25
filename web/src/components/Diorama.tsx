@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
+import { FLAGS } from "../flags";
 import type { Clue } from "../types";
 import { TYPE_COLORS } from "../format";
 import { sound } from "../sound";
@@ -155,10 +156,36 @@ export default function Diorama({ src, depthSrc, w, h, clues, scanning, onFail }
               if (x2 < 0 || y2 < 0 || x2 >= gw || y2 >= gh) continue;
               mn = Math.min(mn, d[y2 * gw + x2]);
             }
-            if (z - mn > EDGE) z = mn;
+            if (!FLAGS.split && z - mn > EDGE) z = mn; // legacy: snap instead of split
             aDepth[i] = z;
             pos.setZ(i, z * DISP * planeH);
           }
+        }
+        if (FLAGS.split && geo.index) {
+          // Split the mesh at depth discontinuities: drop triangles spanning a sharp jump
+          // (real measured depth), so foreground and background tear apart, no rubber sheet.
+          const idx = geo.index.array;
+          const keep: number[] = [];
+          for (let t = 0; t < idx.length; t += 3) {
+            const a0 = d[idx[t]], a1 = d[idx[t + 1]], a2 = d[idx[t + 2]];
+            if (Math.max(a0, a1, a2) - Math.min(a0, a1, a2) <= EDGE) keep.push(idx[t], idx[t + 1], idx[t + 2]);
+          }
+          geo.setIndex(keep);
+          // Blurred copy of the same photo behind the mesh: gaps read as depth of field.
+          const bc = document.createElement("canvas");
+          bc.width = Math.round(tc.width / 4);
+          bc.height = Math.round(tc.height / 4);
+          const bctx = bc.getContext("2d")!;
+          bctx.filter = "blur(6px) brightness(0.7)";
+          bctx.drawImage(tc, 0, 0, bc.width, bc.height);
+          const btex = new THREE.CanvasTexture(bc);
+          btex.colorSpace = THREE.SRGBColorSpace;
+          const back = new THREE.Mesh(
+            new THREE.PlaneGeometry(planeW * 1.02, planeH * 1.02),
+            new THREE.MeshBasicMaterial({ map: btex }),
+          );
+          back.position.z = -0.002;
+          scene.add(back);
         }
         geo.setAttribute("aDepth", new THREE.BufferAttribute(aDepth, 1));
         pos.needsUpdate = true;

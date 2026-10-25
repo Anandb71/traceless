@@ -1,19 +1,19 @@
 {
- "date": "2026-10-25 05:52",
- "base": "http://localhost:8003",
+ "date": "2026-10-25 06:37",
+ "base": "http://localhost:8001",
  "runs": [
   {
    "photo": "abergavenny-book-shop",
    "path": "phone",
    "stage": "done",
-   "wall_s": 59.0,
+   "wall_s": 52.1,
    "timings": {
-    "exif": 0.07,
-    "attack": 5.01,
+    "exif": 0.09,
+    "attack": 5.49,
     "clues": 0.17,
-    "ablation": 7.25,
-    "defense": 45.8,
-    "total": 58.47
+    "ablation": 7.04,
+    "defense": 38.2,
+    "total": 51.3
    },
    "already_safe": false,
    "street_match": false,
@@ -29,13 +29,13 @@
    "photo": "indoor-sunny-apartment",
    "path": "sim",
    "stage": "done",
-   "wall_s": 7.2,
+   "wall_s": 6.1,
    "timings": {
-    "exif": 0.04,
-    "attack": 3.89,
-    "clues": 0.08,
-    "ablation": 2.38,
-    "total": 6.45
+    "exif": 0.03,
+    "attack": 3.17,
+    "clues": 0.04,
+    "ablation": 1.84,
+    "total": 5.14
    },
    "already_safe": true,
    "street_match": false,
@@ -51,14 +51,14 @@
    "photo": "madrid-jamon-shopfront",
    "path": "upload",
    "stage": "done",
-   "wall_s": 52.0,
+   "wall_s": 35.8,
    "timings": {
-    "exif": 0.05,
-    "attack": 9.04,
-    "clues": 0.16,
-    "ablation": 10.53,
-    "defense": 31.85,
-    "total": 51.72
+    "exif": 0.04,
+    "attack": 4.97,
+    "clues": 0.14,
+    "ablation": 8.2,
+    "defense": 22.02,
+    "total": 35.47
    },
    "already_safe": false,
    "street_match": true,
@@ -74,14 +74,14 @@
    "photo": "tyumen-portrait",
    "path": "phone",
    "stage": "done",
-   "wall_s": 23.3,
+   "wall_s": 22.4,
    "timings": {
     "exif": 0.11,
-    "attack": 5.3,
-    "clues": 0.21,
-    "ablation": 9.05,
-    "defense": 7.78,
-    "total": 22.54
+    "attack": 4.31,
+    "clues": 0.24,
+    "ablation": 9.39,
+    "defense": 7.35,
+    "total": 21.47
    },
    "already_safe": false,
    "street_match": false,
@@ -97,14 +97,14 @@
    "photo": "cincinnati-main-st",
    "path": "sim",
    "stage": "done",
-   "wall_s": 64.5,
+   "wall_s": 63.5,
    "timings": {
     "exif": 0.05,
-    "attack": 5.57,
+    "attack": 4.61,
     "clues": 0.1,
-    "ablation": 2.05,
-    "defense": 56.52,
-    "total": 64.45
+    "ablation": 1.93,
+    "defense": 56.31,
+    "total": 63.15
    },
    "already_safe": false,
    "street_match": false,

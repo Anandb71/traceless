@@ -18,6 +18,7 @@ interface Props {
   showFaces?: boolean;
   scanning?: boolean;
   overlay?: ReactNode;
+  onClueClick?: (id: string) => void;
 }
 
 export default function PhotoStage(p: Props) {
@@ -94,8 +95,9 @@ export default function PhotoStage(p: Props) {
               key={c.id}
               className={`clue-box ${on ? "on" : ""} ${hl.has(c.id) ? "hl" : ""} ${
                 c.possible_only ? "possible" : ""
-              } ${p.mode === "erasing" ? "dissolve" : ""}`}
+              } ${p.mode === "erasing" ? "dissolve" : ""} ${p.onClueClick && on ? "tappable" : ""}`}
               style={{ ...boxStyle(c.box), ["--c" as string]: col }}
+              onClick={p.onClueClick && on ? () => p.onClueClick!(c.id) : undefined}
             >
               <span className="clue-num">{c.index}</span>
             </div>

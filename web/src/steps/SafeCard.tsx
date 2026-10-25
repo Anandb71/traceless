@@ -1,6 +1,7 @@
 import type { SessionState } from "../types";
 import { area, km } from "../format";
 import { best } from "./Panels";
+import { FLAGS } from "../flags";
 
 export default function SafeCard({ st }: { st: SessionState | null }) {
   if (!st) return null;
@@ -28,6 +29,12 @@ export default function SafeCard({ st }: { st: SessionState | null }) {
     <div className="card">
       <div className="card-main">
         <div className="kicker">{c.reached_target ? "Safe to post" : "Safer to post"}</div>
+        {FLAGS.plain && (
+        <div className="card-line">
+          Before: <b className="red">{km(c.before_km)}</b> → After: <b className="teal">{km(c.after_km)}</b>
+        </div>
+        )}
+        {!FLAGS.plain && (
         <div className="card-ba">
           <div>
             <div className="card-big red">{km(c.before_km)}</div>
@@ -39,11 +46,12 @@ export default function SafeCard({ st }: { st: SessionState | null }) {
             <div className="muted">after · best of {c.attackers.length} attackers</div>
           </div>
         </div>
+        )}
         <div className="card-grid">
           <Cell k="search area" v={c.area_growth ? `×${c.area_growth >= 10 ? Math.round(c.area_growth).toLocaleString() : c.area_growth.toFixed(1)}` : "—"} />
-          <Cell k="pixels changed" v={c.pct_pixels_changed != null ? `${c.pct_pixels_changed.toFixed(1)}%` : "—"} />
+          <Cell k="photo change" v={c.pct_pixels_changed != null ? `${c.pct_pixels_changed.toFixed(1)}%` : "—"} />
           <Cell k="location data" v={c.metadata_stripped ? "stripped" : "—"} />
-          <Cell k="face" v={c.face_pixels_changed === 0 ? "untouched" : `${c.face_pixels_changed} px`} />
+          <Cell k="your face" v={c.face_pixels_changed === 0 ? "untouched" : `${c.face_pixels_changed} px`} />
         </div>
         <div className="verdict-small">{c.verdict}</div>
       </div>

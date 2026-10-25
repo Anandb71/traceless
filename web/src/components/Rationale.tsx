@@ -1,6 +1,35 @@
 import { useEffect, useMemo, useState } from "react";
 import type { RationaleStep, SessionState } from "../types";
 import { TYPE_NAMES } from "../format";
+import { FLAGS } from "../flags";
+import type { Clue } from "../types";
+
+/** One plain sentence (<= 10 words) per clue, from the clue's real label/OCR text only. */
+export function plainSentence(c: Clue): string {
+  const t = (c.text ?? "").replace(/\s+/g, " ").trim();
+  const short = t.split(" ").slice(0, 3).join(" ");
+  const by: Record<string, string> = {
+    text: short ? `The sign says “${short}”.` : "A sign is readable.",
+    phone: "A phone number shows the area code.",
+    plate: "The number plate format is regional.",
+    landmark: "A recognisable landmark is in view.",
+    building: "The building style is regional.",
+    vegetation: "The plants fit one climate zone.",
+    road_marking: "The road markings follow local rules.",
+    vehicle: "The vehicles are typical of one region.",
+    flag: "A flag names the country.",
+    reflection: "A reflection may show what's behind you.",
+    terrain: "The coastline and terrain are matchable.",
+    other: "The street furniture is regional.",
+    metadata: "The file carries its own location.",
+  };
+  return (by[c.type] ?? "This detail narrows the place.").split(" ").slice(0, 10).join(" ");
+}
+
+function plainLines(st: SessionState | null): (RationaleStep & { who: string })[] {
+  const clues = (st?.clues ?? []).filter((c) => (c.contribution && c.contribution.gain > 0.005) || ["text", "phone", "plate", "flag", "landmark"].includes(c.type));
+  return clues.slice(0, 7).map((c) => ({ text: plainSentence(c), clue_ids: [c.id], who: `clue ${c.index}` }));
+}
 
 const CHAR_MS = 22;
 const PAUSE_MS = 650;
@@ -8,6 +37,10 @@ const KEEP = 6;
 
 /** Lines the attackers actually produced (rationale_steps), with honest offline fallbacks. */
 export function rationaleLines(st: SessionState | null): (RationaleStep & { who: string })[] {
+  if (FLAGS.plain) {
+    const p = plainLines(st);
+    if (p.length) return p;
+  }
   const out: (RationaleStep & { who: string })[] = [];
   for (const a of st?.attacks ?? []) {
     if (a.status !== "ok") continue;

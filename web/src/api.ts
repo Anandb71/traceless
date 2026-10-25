@@ -25,6 +25,10 @@ export const api = {
       body: JSON.stringify({ precise }),
     }).then((r) => j<{ precise: boolean }>(r)),
   saveTake: (id: string) => fetch(`/api/s/${id}/take`, { method: "POST" }).then((r) => j<{ take: string }>(r)),
+  tap: (id: string, clue: string) =>
+    fetch(`/api/s/${id}/tap/${clue}`, { method: "POST" }).then((r) =>
+      j<{ clue_id: string; tapped: string[]; image_url: string; attack: import("./types").AttackResult; pct_pixels_changed: number; label: string }>(r),
+    ),
   takes: () => fetch("/api/takes").then((r) => j<string[]>(r)),
   take: (name: string) => fetch(`/api/takes/${name}`).then((r) => j<SessionState>(r)),
   wipe: () => fetch("/api/wipe", { method: "POST" }).then((r) => j<{ wiped_sessions: number }>(r)),

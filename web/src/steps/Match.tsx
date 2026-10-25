@@ -53,7 +53,9 @@ export default function MatchView({ st, precise }: { st: SessionState; precise: 
           <span className="chip">
             {cov.n_images.toLocaleString()} street photos within {cov.radius_km} km · {cov.source}
           </span>
-          <span className="chip">{match.inliers} verified keypoint matches (threshold {cov.match_threshold})</span>
+          <span className="chip" title={`${match.inliers} RANSAC-verified keypoints; threshold ${cov.match_threshold}`}>
+            match strength {match.inliers} (needs {cov.match_threshold})
+          </span>
           {precise && <span className="chip warn">{match.lat.toFixed(5)}, {match.lon.toFixed(5)}</span>}
         </div>
       </div>

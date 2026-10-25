@@ -218,3 +218,40 @@ not the protection. The README benchmark tables are from the 03:47 run (before
 the cities5000 Reader and the street matcher); a re-run alongside the demo
 server ran at ~90 s/photo on the shared 6 GB GPU and was stopped. Labelled as
 such in the README; `make bench` on an idle GPU reproduces it.
+
+### D27 · Final pass: flags + plain words on stage
+Producer's final 40-minute pass. Every item sits behind a flag in
+`web/src/flags.ts` (`plain`, `tap`, `split`; per-load override `?flags=-tap`).
+`plain`: stage screens say "search area", "match strength", "photo change", "your
+face: untouched"; SSIM/LPIPS move into a collapsed "technical details" panel and the
+README. The rationale panel shows one ≤10-word sentence per clue, built only from
+that clue's real type and OCR text (no invented content). The safe card leads with
+one line: "Before: X → After: Y".
+
+### D28 · Real people's photos: tool shipped, not run (no consented photos available)
+`scripts/friends_test.py` runs the full pipeline on a git-ignored folder of consented
+photos, uses each photo's own GPS as the answer key (no-GPS photos skipped, never
+guessed), keeps per-photo results in memory only, deletes every session, writes only
+aggregates to `bench/friends.json`, and `--delete` removes the photos. The build
+laptop has no consented real-people photos, so the README says "not run yet" rather
+than substituting fixtures.
+
+### D29 · TAP_REMOVE (flag `tap`): tap a clue, watch a *measured* number
+On the Protect step of a live session, clue boxes are tappable.
+`POST /api/s/{id}/tap/{clue}` applies that clue's existing fix to its own mask on a
+cumulative copy, hard-restores the person, and re-attacks with offline GeoCLIP
+(measured ~0.6 s/tap on the RTX 3050); the readout is labelled "fast check (offline
+model)" and animates only to that returned value. Regions with `planned_fix = none`
+(too big to erase) are refused, never inpainted. "Remove the rest" continues to the
+already-computed full defense — all clues, all attackers — whose numbers are
+labelled "all attackers". Off in replays (takes) because taps need a live session.
+Honest note: on the Abergavenny photo, removing small signs does not move GeoCLIP
+(20.6 km before and after two taps); the number that drops is The Reader's, which
+the final "all attackers" result shows.
+
+### D30 · Diorama edge split (flag `split`)
+Shot 1 no longer snaps discontinuities into a rubber sheet: each vertex keeps its
+measured depth and triangles spanning a depth jump > 0.12 are dropped, so foreground
+objects tear away from the wall; a blurred, dimmed copy of the same photo sits just
+behind the mesh so the gaps read as depth of field. `?flags=-split` restores the old
+snapping behaviour.

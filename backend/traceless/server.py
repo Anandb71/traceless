@@ -217,12 +217,26 @@ def session_state(sid: str):
 @app.get("/api/s/{sid}/file/{name}")
 def session_file(sid: str, name: str):
     s = _sess(sid)
-    if name not in {"original.jpg", "protected.jpg", "mask.png", "all_erased.jpg", "depth.png"}:
+    if name not in {"original.jpg", "protected.jpg", "mask.png", "all_erased.jpg", "depth.png"} and not (
+        name.startswith("tap_") and name.endswith(".jpg") and name[4:-4].isdigit()
+    ):
         raise HTTPException(404)
     p = s.dir / name
     if not p.exists():
         raise HTTPException(404, "not ready")
     return FileResponse(p, headers={"Cache-Control": "no-store"})
+
+
+@app.post("/api/s/{sid}/tap/{clue_id}")
+def tap(sid: str, clue_id: str):
+    """TAP_REMOVE: erase one clue, re-attack with offline GeoCLIP (measured, not estimated)."""
+    s = _sess(sid)
+    try:
+        return s.tap(clue_id)
+    except KeyError:
+        raise HTTPException(404, "no such clue") from None
+    except RuntimeError as e:
+        raise HTTPException(409, str(e)) from e
 
 
 @app.delete("/api/s/{sid}")

@@ -32,3 +32,6 @@ bench/data/im2gps3k/
 bench/runs/
 bench/data/*.zip
 bench/results/per_image.jsonl
+
+# consented real photos for scripts/friends_test.py — never committed
+friends_photos/

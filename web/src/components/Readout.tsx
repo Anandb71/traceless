@@ -9,9 +9,10 @@ interface Props {
   attack?: AttackResult;
   frame: number;
   frames: number;
+  note?: string;
 }
 
-export default function Readout({ step, st, attack, frame, frames }: Props) {
+export default function Readout({ step, st, attack, frame, frames, note }: Props) {
   if (!st || step === "zero" || !attack) return null;
   const safeTone = step === "reattack" || step === "safe" || !!st.already_safe;
   // No GPS and no owner-confirmed place: distances are measured from the AI's own
@@ -19,7 +20,7 @@ export default function Readout({ step, st, attack, frame, frames }: Props) {
   const proxy = st.truth?.source === "proxy";
   const after = step === "reattack" || step === "safe";
   const areaMode = proxy && !after;
-  const driver =
+  const driver = note ? note :
     step === "attack" && frames > 0
       ? `collapse driven by ${attack.attacker_name} · frame ${Math.max(0, frame) + 1}/${frames}`
       : attack.attacker_name;
@@ -29,7 +30,7 @@ export default function Readout({ step, st, attack, frame, frames }: Props) {
         <div className="ro-main">
           <span className="ro-label">Narrowed to</span>
           <Counter value={attack.credible_area_km2} format={area} />
-          <span className="ro-label">90% search area</span>
+          <span className="ro-label">search area</span>
         </div>
       ) : (
         <div className="ro-main">
@@ -41,7 +42,7 @@ export default function Readout({ step, st, attack, frame, frames }: Props) {
       <div className="ro-sub">
         {!areaMode && (
           <span>
-            90% search area <Counter value={attack.credible_area_km2} format={area} />
+            search area <Counter value={attack.credible_area_km2} format={area} />
           </span>
         )}
         <span className="scale">{scale(attack.credible_area_km2)}-level</span>
