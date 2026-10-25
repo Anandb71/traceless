@@ -180,7 +180,6 @@ def main() -> None:
     print(f"{len(items)} images downloaded")
 
     from PIL import Image
-
     from traceless.attackers.street import StreetModels
 
     sm = StreetModels.get()

@@ -1,5 +1,4 @@
 import numpy as np
-
 from traceless.defense.inpaint import blur, glyph_mask, portrait_blur, soften
 
 

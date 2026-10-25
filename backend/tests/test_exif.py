@@ -2,7 +2,6 @@ import io
 
 import piexif
 from PIL import Image
-
 from traceless.exif import has_any_metadata, load_clean, read_exif, save_clean_jpeg
 
 

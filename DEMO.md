@@ -28,5 +28,7 @@ take for the current step if anything stalls.
 
 ## Before going on stage
 - `make demo`, wait for **models ready**; run one SIM photo (records the PANIC take).
+- Nothing else on the GPU (no bench, no tests): measured full run ≈ 50 s alone vs 140 s
+  with another GPU job — the presenter-paced reveal hides ~50 s, not 140.
 - Sound on (S toggles). Privacy mode on (default).
 - After the session: **Shift+W** wipes every uploaded photo from the laptop.

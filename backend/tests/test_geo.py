@@ -2,7 +2,6 @@ import math
 
 import h3
 import numpy as np
-
 from traceless.geo import ANALYSIS_RES, Distribution, gazetteer, haversine_km
 from traceless.schemas import Hypothesis
 

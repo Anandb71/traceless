@@ -1,7 +1,6 @@
 """Cloud attacker: schema handling, failover and graceful skip — no network."""
 
 from PIL import Image
-
 from traceless.attackers import cloud
 from traceless.attackers.base import AttackContext
 from traceless.schemas import Truth

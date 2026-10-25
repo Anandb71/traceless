@@ -11,7 +11,6 @@ import json
 from pathlib import Path
 
 import pytest
-
 from traceless.pipeline import Session
 from traceless.schemas import Truth
 

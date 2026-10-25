@@ -1,9 +1,11 @@
 # TRACELESS — one-command workflows. Works in Git Bash / any POSIX shell.
 PY := backend/.venv/Scripts/python
-ifeq ($(wildcard $(PY)),)
+ifeq ($(wildcard $(PY).exe),)
 PY := backend/.venv/bin/python
 endif
 export PYTHONUTF8 := 1
+# interpreter path as seen from inside backend/
+BPY := $(patsubst backend/%,%,$(PY))
 
 .PHONY: setup models web dev demo test lint bench bench-quick iris clean-sessions
 
@@ -19,19 +21,19 @@ web:
 	cd web && pnpm build
 
 demo: web ## serve API + web app on :8000 (open http://localhost:8000)
-	cd backend && .venv/Scripts/python -m traceless.server || .venv/bin/python -m traceless.server
+	cd backend && $(BPY) -m traceless.server
 
 dev: ## backend only; run `cd web && pnpm dev` alongside for hot reload
-	cd backend && .venv/Scripts/python -m traceless.server
+	cd backend && $(BPY) -m traceless.server
 
 test:
-	cd backend && .venv/Scripts/python -m pytest -q
+	cd backend && $(BPY) -m pytest -q
 
 test-golden: ## slow: full pipeline on every fixture photo
-	cd backend && .venv/Scripts/python -m pytest -q -m golden
+	cd backend && $(BPY) -m pytest -q -m golden
 
 lint:
-	cd backend && .venv/Scripts/python -m ruff check traceless tests
+	$(PY) -m ruff check --config backend/pyproject.toml backend/traceless backend/tests scripts bench
 	cd web && pnpm typecheck
 
 bench: ## benchmark on Im2GPS3k subset -> bench/results/latest.json (+ README tables)

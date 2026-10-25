@@ -45,7 +45,8 @@ make demo           # serves everything on http://localhost:8000 (and the LAN IP
 
 1. Open the URL the server prints (normally `http://localhost:8000`; if that port is
    stuck it falls back to 8001+ and says so) full-screen on the projector (F11). Wait for the
-   **models ready** chip (≈30 s on first start; warm-up runs automatically).
+   **models ready** chip (warm-up runs automatically: ~1 min warm, up to ~3–4 min on a cold
+   disk cache or if another GPU job is running — start the server well before the demo).
 2. Laptop and phones on the same network (a phone hotspot works). The QR on the
    home screen points at the laptop's LAN IP; if it shows `127.0.0.1`, set
    `TRACELESS_HOST=<laptop LAN IP>` in `backend/.env` and restart.

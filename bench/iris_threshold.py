@@ -29,8 +29,8 @@ from PIL import Image, ImageDraw, ImageFilter
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "backend"))
 
-from traceless.attackers.geoclip_attacker import GeoCLIPAttacker  # noqa: E402
 from traceless.attackers.base import AttackContext  # noqa: E402
+from traceless.attackers.geoclip_attacker import GeoCLIPAttacker  # noqa: E402
 from traceless.clues.ocr import read_text  # noqa: E402
 from traceless.geo import haversine_km  # noqa: E402
 

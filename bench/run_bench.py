@@ -96,7 +96,6 @@ def med(xs):
 
 def run_one(path: Path, lat: float, lon: float, radius: float) -> dict:
     from PIL import Image
-
     from traceless.attackers.base import AttackContext
     from traceless.attackers.geoclip_attacker import GeoCLIPAdaptiveAttacker
     from traceless.pipeline import Session
