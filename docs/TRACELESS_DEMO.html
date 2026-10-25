@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>TRACELESS — Technical &amp; Demo Document</title>
+<style>
+  @page { size: letter; margin: 0.9in 0.9in 1in 0.9in; }
+  * { box-sizing: border-box; }
+  body { font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif; color: #16181d;
+         font-size: 10.5pt; line-height: 1.55; margin: 0; }
+  .cover { height: 9in; display: flex; flex-direction: column; justify-content: center;
+           page-break-after: always; }
+  .cover .kicker { font-size: 10pt; letter-spacing: .3em; text-transform: uppercase;
+                   color: #8a6d1d; margin-bottom: 14pt; }
+  .cover h1 { font-size: 52pt; margin: 0 0 10pt; letter-spacing: -0.02em; }
+  .cover .tag { font-size: 15pt; color: #444; margin-bottom: 28pt; }
+  .cover .meta { font-size: 10pt; color: #666; border-top: 1px solid #ccc;
+                 padding-top: 12pt; max-width: 420pt; }
+  h1 { font-size: 20pt; margin: 26pt 0 8pt; padding-bottom: 6pt;
+       border-bottom: 2px solid #16181d; page-break-after: avoid; }
+  h2 { font-size: 13pt; margin: 18pt 0 6pt; page-break-after: avoid; }
+  h3 { font-size: 11pt; margin: 12pt 0 4pt; page-break-after: avoid; }
+  p { margin: 0 0 8pt; }
+  ul, ol { margin: 0 0 8pt 18pt; padding: 0; }
+  li { margin-bottom: 3pt; }
+  table { border-collapse: collapse; width: 100%; margin: 8pt 0 14pt;
+          font-size: 9.5pt; page-break-inside: avoid; }
+  th { text-align: left; border-bottom: 2px solid #16181d; padding: 4pt 8pt 4pt 0;
+       font-size: 8.5pt; text-transform: uppercase; letter-spacing: .05em; }
+  td { border-bottom: 1px solid #ddd; padding: 4pt 8pt 4pt 0; vertical-align: top; }
+  code, .mono { font-family: "Cascadia Code", Consolas, monospace; font-size: 9pt;
+                background: #f4f4f6; padding: 1pt 4pt; border-radius: 3pt; }
+  pre { font-family: "Cascadia Code", Consolas, monospace; font-size: 8.5pt;
+        background: #16181d; color: #e8e8ea; padding: 10pt 12pt; border-radius: 4pt;
+        line-height: 1.5; white-space: pre-wrap; page-break-inside: avoid; }
+  .callout { border-left: 3pt solid #8a6d1d; background: #faf7ee; padding: 8pt 12pt;
+             margin: 10pt 0; page-break-inside: avoid; }
+  .metric { display: inline-block; border: 1px solid #ddd; border-radius: 4pt;
+            padding: 6pt 10pt; margin: 0 6pt 6pt 0; text-align: center; }
+  .metric b { display: block; font-size: 16pt; }
+  .metric span { font-size: 8pt; color: #666; text-transform: uppercase; letter-spacing: .05em; }
+  .flow { font-family: Consolas, monospace; font-size: 8.5pt; background: #f4f4f6;
+          padding: 10pt 12pt; border-radius: 4pt; line-height: 1.7; white-space: pre;
+          page-break-inside: avoid; }
+  .truthrule { background: #eef4ee; border-left: 3pt solid #3a7a3a; padding: 6pt 10pt;
+               margin: 6pt 0; }
+  .small { font-size: 8.5pt; color: #555; }
+  .num { text-align: right; font-variant-numeric: tabular-nums; }
+  .pagebreak { page-break-before: always; }
+</style>
+</head>
+<body>
+
+<div class="cover">
+  <div class="kicker">Devin Hackathon · Track 2 · Make the Invisible Visible</div>
+  <h1>TRACELESS</h1>
+  <div class="tag">See what a stalker&rsquo;s AI sees in your photo — then make it unplaceable.</div>
+  <div class="meta">
+    Technical &amp; demo document · Built by a Claude Code builder lane, committed by Devin ·
+    Every number in this document was measured by the system or its benchmark scripts.
+  </div>
+</div>
+
+<h1>1 · The Problem</h1>
+<p>In 2019, a man in Japan found a pop idol&rsquo;s home from the reflection in her eyes in a
+photo she posted. In 2025, AI &ldquo;geoguessing&rdquo; went viral — tools like GeoSpy place a photo
+in seconds. Every social app strips EXIF location data. <b>Nobody strips the picture.</b>
+The pixels themselves are the leak: sign text, vegetation, architecture, road markings,
+and reflections carry location whether metadata exists or not.</p>
+<p>Defenses exist mainly in research papers. We checked the product landscape and found no
+shipping product that detects the visual clues, removes them, and proves the removal
+worked. TRACELESS is that loop, end to end, on one laptop.</p>
+
+<div class="callout"><b>One-liner:</b> Upload a photo. Watch five different AIs place it.
+Watch the clues get erased. Watch the same AIs fail. Get the photo back on your phone,
+safe to post.</div>
+
+<h1>2 · What TRACELESS Does</h1>
+<ol>
+  <li><b>Clue zero.</b> Reads EXIF/GPS, shows it, strips it <i>before any attacker sees the
+  image</i>. GPS is never attack input — it is only the answer key for measuring error.</li>
+  <li><b>The attack.</b> Five independent geolocation models attack the pixels in parallel.
+  Numbered clue boxes (OCR text, segmentation, faces/reflections) are found and merged with
+  attacker-reported clues.</li>
+  <li><b>Clue accounting.</b> Each clue&rsquo;s contribution is <i>measured by ablation</i>:
+  erase only that clue, re-attack, record the change in 90% credible area and top-1 error.</li>
+  <li><b>The defense.</b> Least-destructive fix per clue: LaMa inpainting, glyph-level text
+  erasure, blur, reflection softening. Faces are never altered except softening eye
+  reflections.</li>
+  <li><b>Proof.</b> Re-attack with all attackers — including an adaptive attacker told the
+  photo was edited. &ldquo;Safe&rdquo; means every tested attacker misses by more than the
+  chosen radius (default 25&nbsp;km). If it cannot be reached, we say so.</li>
+  <li><b>Handback.</b> QR code → the judge downloads the protected photo to their own phone.</li>
+</ol>
+
+<h1>3 · Architecture</h1>
+<pre>phone ──QR──► FastAPI backend (sessions, staged pipeline) ──state JSON──► React app (projector)
+                  │  pixels only, EXIF stripped first
+                  ├─ 5 attackers in parallel (offline + cloud + street + web)
+                  ├─ clue finders: OCR · dense segmentation · face/iris
+                  ├─ ablation engine (measured contributions + collapse sequence)
+                  ├─ defense loop (LaMa / glyph-erase / blur / soften)
+                  └─ sessions, takes (PANIC replays), QR upload &amp; download, wipe</pre>
+
+<h2>Pipeline stages</h2>
+<table>
+<tr><th>Stage</th><th>Module</th><th>What it does</th></tr>
+<tr><td>exif</td><td><code>exif.py</code></td><td>Parse + strip all metadata; GPS kept only as answer key; verify the saved file is metadata-free.</td></tr>
+<tr><td>attack</td><td><code>attackers/*</code></td><td>All available attackers run on pixels in parallel; each returns ranked hypotheses + rationale + a hex-grid probability distribution.</td></tr>
+<tr><td>clues</td><td><code>clues/*</code></td><td>OCR lines, dense segmentation candidates, faces with measured iris-size gate; merged with attacker clue boxes.</td></tr>
+<tr><td>ablation</td><td><code>ablation.py</code></td><td>Per-clue erase → re-attack → Δ credible area / Δ error. Builds the real collapse animation frame-by-frame.</td></tr>
+<tr><td>defense</td><td><code>defense/loop.py</code></td><td>Erase top contributors → re-attack → stop when all attackers miss the radius or K rounds; honest &ldquo;not reached&rdquo; verdict.</td></tr>
+<tr><td>card</td><td><code>metrics.py</code></td><td>Before/after distance, area growth, % pixels changed, SSIM/LPIPS — all computed, none typed.</td></tr>
+</table>
+
+<h2>The five attackers</h2>
+<table>
+<tr><th>Attacker</th><th>Model</th><th>On/Offline</th><th>Role</th></tr>
+<tr><td><b>A — Cloud</b></td><td>Frontier vision model, strict JSON schema</td><td>Cloud</td><td>Human-level clue reading + hypotheses</td></tr>
+<tr><td><b>B — GeoCLIP</b></td><td>GPS-retrieval (open source), tiled views</td><td>Offline</td><td>Primary attacker + ablation driver</td></tr>
+<tr><td><b>Adaptive</b></td><td>GeoCLIP fed close-up crops</td><td>Offline</td><td>&ldquo;Told the photo was edited&rdquo; re-attack</td></tr>
+<tr><td><b>C — Street</b></td><td>EigenPlaces → LightGlue → RANSAC</td><td>Offline</td><td>Street-level pinpoint inside coverage</td></tr>
+<tr><td><b>Reader</b></td><td>OCR → cities5000 gazetteer</td><td>Offline</td><td>Reads town/shop names off signs</td></tr>
+<tr><td><b>Sleuth</b></td><td>Web-research attacker</td><td>Cloud</td><td>Launched first; the ~70 s long pole</td></tr>
+</table>
+<p class="small">Attacker C pipeline: EigenPlaces ResNet-50+GeM descriptors → cosine top-k over a
+downloaded Mapillary reference set → SuperPoint keypoints + LightGlue matching →
+USAC-MAGSAC fundamental-matrix verification → pinpoint only if inliers clear a
+<i>measured</i> threshold (T = 55, measured at 95% precision within 100 m).</p>
+
+<h1 class="pagebreak">4 · Measured Results</h1>
+<h2>Benchmark — Im2GPS3k, 300 random + 100 readable-text photos, offline attackers</h2>
+<div>
+  <span class="metric"><b>33.7% → 20.3%</b><span>GeoCLIP placements ≤25 km (random)</span></span>
+  <span class="metric"><b>42% → 26%</b><span>≤25 km (text-rich set)</span></span>
+  <span class="metric"><b>232 → 378 km</b><span>median error</span></span>
+  <span class="metric"><b>31.3% → 22.7%</b><span>adaptive attacker ≤25 km</span></span>
+  <span class="metric"><b>0.91</b><span>SSIM after defense</span></span>
+  <span class="metric"><b>19.5%</b><span>median pixels changed</span></span>
+</div>
+<p class="small">Of the photos that needed defending, the 25 km target was reached on 33 of 101
+(random) and 14 of 43 (text-rich). Famous, heavily photographed scenes resist — reported,
+not hidden. The Reader row is the pre-gazetteer-upgrade version, labelled as such.</p>
+
+<h2>Street level — real match, measured threshold</h2>
+<p>On the Madrid fixture, Attacker C found a <i>different photo of the same shop</i> 170 m
+away with 147 verified keypoint inliers against the measured threshold of 55. Street-level
+claims are made only inside downloaded coverage, whose size is always shown.</p>
+
+<h2>CLOAK — adversarial noise, honestly reported</h2>
+<table>
+<tr><th>Fixture</th><th>GeoCLIP error before</th><th>After ±2/255 noise</th><th>Transfer to crops</th></tr>
+<tr><td>Generic</td><td class="num">21 km</td><td class="num">475 km (LPIPS 0.007)</td><td>weak</td></tr>
+<tr><td>Madrid (memorized scene)</td><td class="num">0.95 km</td><td class="num">506 km</td><td>0.43 km — still placed</td></tr>
+</table>
+<p>White-box noise tuned to one view of one model is brittle: the adaptive attacker&rsquo;s
+close-up crops still place the photo. That is exactly why the <i>visible</i> erase is the
+main defense — reported as measured, including the weak transfer.</p>
+
+<h2>Prepared demo photo — Abergavenny bookshop</h2>
+<p>The Reader reads the town name off a sign and places it <b>120 m</b> away. After
+protection, every attacker misses by more than 25 km (GeoCLIP: 89 km), with 21.6% of pixels
+changed and <b>zero face pixels touched</b>.</p>
+
+<h2>Final rehearsal — 5 photos, one server, no restarts</h2>
+<table>
+<tr><th>Photo</th><th>Entry</th><th>Result</th><th class="num">Time</th></tr>
+<tr><td>Abergavenny (prepared)</td><td>phone QR</td><td>120 m → 89 km, target reached</td><td class="num">52 s</td></tr>
+<tr><td>Indoor apartment</td><td>SIM</td><td>already hard to place</td><td class="num">6 s</td></tr>
+<tr><td>Madrid</td><td>drag-drop</td><td>street match found, then broken; under 1 km → honest &ldquo;not reached&rdquo;</td><td class="num">36 s</td></tr>
+<tr><td>Tyumen portrait</td><td>phone QR</td><td>no GPS; moved 8,846 km from the AI&rsquo;s first guess</td><td class="num">22 s</td></tr>
+<tr><td>Cincinnati</td><td>SIM</td><td>honest &ldquo;not reached&rdquo;</td><td class="num">64 s</td></tr>
+</table>
+
+<h1>5 · Truth Rules (enforced in code)</h1>
+<div class="truthrule">EXIF/GPS is stripped before any attacker sees pixels; GPS is only an answer key.</div>
+<div class="truthrule">Eye reflections are claimed readable only above a measured iris-pixel threshold; below it, reflective surfaces are flagged as &ldquo;possible clue&rdquo; and softened as a labeled precaution.</div>
+<div class="truthrule">Every on-screen number comes from the run or the benchmark scripts. Clue contributions are measured by ablation, never invented.</div>
+<div class="truthrule">&ldquo;Can&rsquo;t be placed&rdquo; means &ldquo;not within the chosen radius, by the attackers we tested&rdquo; — stated with both.</div>
+<div class="truthrule">Street-level claims only inside downloaded coverage; coverage size is always shown.</div>
+<div class="truthrule">No &ldquo;locate any photo&rdquo; mode. The attack is a risk report on your own photo. Exact coordinates only for public landmarks or with the owner&rsquo;s OK.</div>
+<div class="truthrule">The person is never altered, except softening eye reflections. Photos stay on the laptop; wipe deletes them.</div>
+
+<h1>6 · The Live Demo (3 minutes)</h1>
+<table>
+<tr><th class="num">Time</th><th>Moment</th></tr>
+<tr><td class="num">0:00</td><td>Hook: the 2019 eye-reflection case, one sentence. Judge scans QR, sends a photo.</td></tr>
+<tr><td class="num">0:15</td><td>Shot 1 — the photo becomes a 3D diorama (Depth Anything V2); clue pins light up at real depths; clue zero strips.</td></tr>
+<tr><td class="num">0:35</td><td>Shot 2 — globe pulls out; hex columns collapse country → city → street as the ablation sequence plays. Rationale types in plain words.</td></tr>
+<tr><td class="num">1:00</td><td>Shots 3–4 — dive into 3D buildings; split-screen keypoint match to the street photo. &ldquo;Placed X m from where you stood.&rdquo;</td></tr>
+<tr><td class="num">1:25</td><td>Which clues gave you away — measured contributions.</td></tr>
+<tr><td class="num">1:35</td><td>Shot 5 — particle-dissolve erasure; globe bursts back out. &ldquo;Best guess now Y km off. No street match.&rdquo;</td></tr>
+<tr><td class="num">2:20</td><td>Shot 6 — before/after slider (on the face: untouched), the numbers, QR to the judge&rsquo;s phone.</td></tr>
+<tr><td class="num">2:50</td><td>&ldquo;Share the moment, not the address.&rdquo;</td></tr>
+</table>
+<p class="small">Every step has a PANIC key playing its recorded take. An indoor photo routes
+to the honest &ldquo;already hard to place&rdquo; path — the failure becomes a feature.</p>
+
+<h1>7 · Built with Devin (the workflow itself)</h1>
+<p>This repo ran a split-brain agent workflow: <b>Claude Code</b> was the builder —
+architecting, writing, and self-verifying all code across multiple autonomous sessions —
+while <b>Devin</b> was the orchestrator and committer: issuing the brief and upgrade specs,
+reviewing every diff, and authoring all 12 commits on
+<code>github.com/Anandb71/traceless</code>. The builder logged 20+ design decisions in
+<code>DECISIONS.md</code> and answered the upgrade spec with <code>UPGRADE_PLAN.md</code>
+before touching code.</p>
+<ul>
+  <li>Headless <code>claude -p</code> sessions with streamed JSON logs watched for
+  <code>DEVIN_COMMIT_READY</code> markers; Devin committed each verified unit.</li>
+  <li>Session continuity via <code>--continue</code>: the builder kept full context across
+  build → upgrade → freeze → final pass.</li>
+  <li>Self-verification: visual QA via self-screenshots, golden tests, a 5-photo rehearsal
+  script, measured thresholds — not vibes.</li>
+</ul>
+
+<h1>8 · Stack &amp; One-Command Start</h1>
+<table>
+<tr><th>Layer</th><th>Technology</th></tr>
+<tr><td>Backend</td><td>Python 3.12, FastAPI, PyTorch (CUDA), OpenCV, Pillow, NumPy</td></tr>
+<tr><td>Models</td><td>GeoCLIP · EigenPlaces+LightGlue · LaMa · Depth Anything V2 · MediaPipe iris · OCR · dense segmentation</td></tr>
+<tr><td>Frontend</td><td>TypeScript, React, Vite, canvas globe + diorama, synthesized audio</td></tr>
+<tr><td>Ops</td><td>Makefile (<code>make demo</code> / <code>make bench</code>), QR session tokens, PANIC takes, offline-first</td></tr>
+</table>
+<pre>$ make demo        # ≈2 min cold, ~47 s warm — serves UI + prints URL
+$ make bench       # Im2GPS3k subset benchmark → bench/results/
+$ py scripts/rehearse.py   # 5-photo end-to-end rehearsal</pre>
+
+<p class="small">All measurements in this document are traceable to files in
+<code>bench/results/</code>, <code>backend/traceless/data/</code>, and
+<code>takes/</code>. Licenses: fixture photos from Wikimedia Commons (see
+fixtures/ATTRIBUTION.md); Mapillary reference imagery CC BY-SA.</p>
+
+</body>
+</html>
