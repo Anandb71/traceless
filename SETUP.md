@@ -1,5 +1,20 @@
 # SETUP — demo laptop in ≤ 2 minutes (after the one-time install)
 
+## The 2-minute checklist
+
+| # | do | time |
+|---|---|---|
+| 1 | Close other GPU jobs (bench, tests). `make demo` | 0:00 |
+| 2 | Open the URL it prints (`TRACELESS → http://localhost:NNNN`) in Chrome, F11 | 0:10 |
+| 3 | Wait for the **models ready** chip (measured 47 s warm) | ≤ 1:00 |
+| 4 | Phone on the same Wi-Fi/hotspot, scan the home-screen QR — page opens | 1:20 |
+| 5 | Click the Abergavenny SIM photo, press → once to see it working, then **H** | 2:00 |
+
+If anything misbehaves on stage: **P** replays the recorded take for that step.
+Recorded takes for the prepared photo, Madrid and the indoor photo ship in `takes/`.
+
+---
+
 ## One-time install (~10 min, needs internet)
 
 Requirements: Python 3.12 + [uv](https://docs.astral.sh/uv/), Node 20+ + pnpm, Git Bash (Windows) or any POSIX shell.

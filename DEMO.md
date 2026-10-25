@@ -32,3 +32,19 @@ take for the current step if anything stalls.
   with another GPU job — the presenter-paced reveal hides ~50 s, not 140.
 - Sound on (S toggles). Privacy mode on (default).
 - After the session: **Shift+W** wipes every uploaded photo from the laptop.
+
+## Rehearsal record (`scripts/rehearse.py`, one server, no restarts)
+Measured 2026-10-25 on the build laptop (RTX 3050), offline attackers only.
+Full results: `bench/results/rehearsal.json`.
+
+| # | photo | entry path | outcome | wall time |
+|---|---|---|---|---|
+| 1 | Abergavenny (prepared) | phone QR | 120 m → 89 km, target reached, 21.6% px changed | 59 s |
+| 2 | Indoor apartment | SIM | already hard to place | 7 s |
+| 3 | Madrid (street coverage) | drag-and-drop | street match (170 m), broken by erase; GeoCLIP still 0.9 km → "not reached" | 52 s |
+| 4 | Tyumen portrait (no GPS) | phone QR | proxy answer key; moved 8,846 km; face untouched | 23 s |
+| 5 | Cincinnati (famous scene) | SIM | honest "not reached" (0.26 → 0.43 km) | 65 s |
+
+All 5 passed every check (card numbers, face pixels = 0, download page + metadata-free file,
+take recorded); all 16 PANIC takes replay. Not covered here (needs hardware): a real phone,
+the projector, sound — see HARDWARE_TEST.md.
